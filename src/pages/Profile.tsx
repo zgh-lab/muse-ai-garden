@@ -498,146 +498,171 @@ export default function Profile() {
             {/* Content Area */}
             <div className="max-w-6xl mx-auto px-6 py-6">
               <Tabs defaultValue="assets" className="w-full">
-                {/* Main Tab Navigation */}
-                <TabsList className="inline-flex h-9 rounded-lg p-0.5 bg-secondary/40 mb-5">
-                  <TabsTrigger 
-                    value="assets" 
-                    className="flex items-center gap-1.5 px-3 h-8 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
-                  >
-                    <FolderOpen className="h-3.5 w-3.5" />
-                    个人资产库
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="archived" 
-                    className="flex items-center gap-1.5 px-3 h-8 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
-                  >
-                    <Archive className="h-3.5 w-3.5" />
-                    已归档聊天
-                  </TabsTrigger>
-                </TabsList>
+                {/* Level 1: Main Tab Navigation */}
+                <div className="flex items-center justify-between mb-6">
+                  <TabsList className="h-10 rounded-xl p-1 bg-secondary/50">
+                    <TabsTrigger 
+                      value="assets" 
+                      className="flex items-center gap-2 px-4 h-8 rounded-lg text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+                    >
+                      <FolderOpen className="h-4 w-4" />
+                      个人资产库
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="archived" 
+                      className="flex items-center gap-2 px-4 h-8 rounded-lg text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+                    >
+                      <Archive className="h-4 w-4" />
+                      已归档聊天
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
 
-                <TabsContent value="assets" className="space-y-4">
+                <TabsContent value="assets" className="space-y-0">
                   <Tabs value={assetCategory} onValueChange={setAssetCategory}>
-                    {/* Combined Filter Bar */}
-                    <div className="flex items-center gap-3 py-3 border-b border-border/30">
-                      {/* Left: Asset Type Tabs */}
-                      <TabsList className="h-8 rounded-lg p-0.5 bg-transparent border border-border/40">
-                        <TabsTrigger value="images" className="flex items-center gap-1.5 px-2.5 h-7 text-xs rounded-md data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
-                          <ImageIcon className="h-3.5 w-3.5" />
+                    {/* Level 2: Asset Type Tabs */}
+                    <div className="flex items-center justify-between pb-4 border-b border-border/30">
+                      <TabsList className="h-9 rounded-lg p-1 bg-secondary/40">
+                        <TabsTrigger value="images" className="flex items-center gap-1.5 px-3 h-7 text-sm rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                          <ImageIcon className="h-4 w-4" />
                           图片
                         </TabsTrigger>
-                        <TabsTrigger value="videos" className="flex items-center gap-1.5 px-2.5 h-7 text-xs rounded-md data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
-                          <Video className="h-3.5 w-3.5" />
+                        <TabsTrigger value="videos" className="flex items-center gap-1.5 px-3 h-7 text-sm rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                          <Video className="h-4 w-4" />
                           视频
                         </TabsTrigger>
-                        <TabsTrigger value="audio" className="flex items-center gap-1.5 px-2.5 h-7 text-xs rounded-md data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
-                          <Music className="h-3.5 w-3.5" />
+                        <TabsTrigger value="audio" className="flex items-center gap-1.5 px-3 h-7 text-sm rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                          <Music className="h-4 w-4" />
                           音频
                         </TabsTrigger>
                       </TabsList>
 
-                      {/* Divider */}
-                      <div className="w-px h-5 bg-border/40" />
+                      {/* Right Actions */}
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}
+                          className="flex items-center gap-1.5 h-8 px-3 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
+                        >
+                          {sortOrder === "desc" ? <ArrowDown className="h-4 w-4" /> : <ArrowUp className="h-4 w-4" />}
+                          {sortOrder === "desc" ? "最新" : "最早"}
+                        </button>
+                        <button 
+                          onClick={toggleBatchSelectMode}
+                          className={cn(
+                            "h-8 px-3 rounded-lg text-sm font-medium transition-colors",
+                            batchSelectMode 
+                              ? "bg-primary text-primary-foreground" 
+                              : "border border-border/50 text-foreground hover:bg-secondary/50"
+                          )}
+                        >
+                          {batchSelectMode ? "取消选择" : "批量选择"}
+                        </button>
+                      </div>
+                    </div>
 
+                    {/* Level 3: Filters Row */}
+                    <div className="flex items-center gap-3 py-3">
                       {/* Search */}
-                      <div className="relative w-40">
-                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                      <div className="relative flex-1 max-w-[240px]">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                           type="text"
-                          placeholder="搜索..."
+                          placeholder="搜索资产..."
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
-                          className="pl-8 h-8 text-sm bg-transparent border-border/40"
+                          className="pl-9 h-9 text-sm bg-secondary/30 border-transparent focus:border-primary/50"
                         />
                       </div>
 
-                      {/* Source Select */}
-                      <Select value={selectedSource} onValueChange={setSelectedSource}>
-                        <SelectTrigger className="w-[100px] h-8 text-xs bg-transparent border-border/40">
-                          <SelectValue placeholder="来源" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">所有</SelectItem>
-                          <SelectItem value="jarvis">贾维斯</SelectItem>
-                          <SelectItem value="webhub">Webhub</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      {/* Filter Group */}
+                      <div className="flex items-center gap-2">
+                        {/* Source Select */}
+                        <Select value={selectedSource} onValueChange={setSelectedSource}>
+                          <SelectTrigger className="w-[110px] h-9 text-sm bg-secondary/30 border-transparent">
+                            <SelectValue placeholder="来源" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">所有来源</SelectItem>
+                            <SelectItem value="jarvis">贾维斯</SelectItem>
+                            <SelectItem value="webhub">Webhub</SelectItem>
+                          </SelectContent>
+                        </Select>
 
-                      {/* Favorites Checkbox */}
-                      <button 
-                        onClick={() => setShowFavorites(!showFavorites)}
-                        className={cn(
-                          "flex items-center gap-1.5 h-8 px-2.5 rounded-lg border text-xs transition-colors",
-                          showFavorites 
-                            ? "border-primary/50 bg-primary/10 text-primary" 
-                            : "border-border/40 text-muted-foreground hover:text-foreground hover:border-border"
-                        )}
-                      >
-                        <Star className={cn("h-3.5 w-3.5", showFavorites && "fill-primary")} />
-                        收藏
-                      </button>
+                        {/* Favorites */}
+                        <button 
+                          onClick={() => setShowFavorites(!showFavorites)}
+                          className={cn(
+                            "flex items-center gap-1.5 h-9 px-3 rounded-lg text-sm transition-all",
+                            showFavorites 
+                              ? "bg-primary/15 text-primary border border-primary/30" 
+                              : "bg-secondary/30 text-muted-foreground hover:text-foreground"
+                          )}
+                        >
+                          <Star className={cn("h-4 w-4", showFavorites && "fill-primary")} />
+                          收藏
+                        </button>
 
-                      {/* Tags */}
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <button className={cn(
-                            "flex items-center gap-1.5 h-8 px-2.5 rounded-lg border text-xs transition-colors",
-                            selectedTags.length > 0
-                              ? "border-primary/50 bg-primary/10 text-primary" 
-                              : "border-border/40 text-muted-foreground hover:text-foreground hover:border-border"
-                          )}>
-                            <Tag className="h-3.5 w-3.5" />
-                            {selectedTags.length === 0 ? "标签" : `${selectedTags.length}个`}
-                          </button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-44 p-2">
-                          <div className="space-y-1">
-                            <div className="flex items-center justify-between px-1 pb-1 border-b border-border/30">
-                              <span className="text-xs font-medium">选择标签</span>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => {
-                                  setManagingTags(true);
-                                  setTagDialogOpen(true);
-                                }}
-                                className="h-5 px-1.5 text-xs"
-                              >
-                                管理
-                              </Button>
-                            </div>
-                            {availableTags.map((tag) => (
-                              <div key={tag} className="flex items-center gap-2 px-1 py-1 rounded hover:bg-secondary/50">
-                                <Checkbox
-                                  id={`tag-${tag}`}
-                                  checked={selectedTags.includes(tag)}
-                                  onCheckedChange={() => toggleTag(tag)}
-                                  className="h-3.5 w-3.5"
-                                />
-                                <Label htmlFor={`tag-${tag}`} className="cursor-pointer text-xs flex-1">
-                                  {tag}
-                                </Label>
+                        {/* Tags */}
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <button className={cn(
+                              "flex items-center gap-1.5 h-9 px-3 rounded-lg text-sm transition-all",
+                              selectedTags.length > 0
+                                ? "bg-primary/15 text-primary border border-primary/30" 
+                                : "bg-secondary/30 text-muted-foreground hover:text-foreground"
+                            )}>
+                              <Tag className="h-4 w-4" />
+                              {selectedTags.length === 0 ? "标签" : `标签 (${selectedTags.length})`}
+                            </button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-48 p-2">
+                            <div className="space-y-1">
+                              <div className="flex items-center justify-between px-2 py-1.5 border-b border-border/30">
+                                <span className="text-sm font-medium">选择标签</span>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => {
+                                    setManagingTags(true);
+                                    setTagDialogOpen(true);
+                                  }}
+                                  className="h-6 px-2 text-xs"
+                                >
+                                  管理
+                                </Button>
                               </div>
-                            ))}
-                          </div>
-                        </PopoverContent>
-                      </Popover>
+                              {availableTags.map((tag) => (
+                                <div key={tag} className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-secondary/50">
+                                  <Checkbox
+                                    id={`tag-${tag}`}
+                                    checked={selectedTags.includes(tag)}
+                                    onCheckedChange={() => toggleTag(tag)}
+                                  />
+                                  <Label htmlFor={`tag-${tag}`} className="cursor-pointer text-sm flex-1">
+                                    {tag}
+                                  </Label>
+                                </div>
+                              ))}
+                            </div>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
 
                       {/* Spacer */}
                       <div className="flex-1" />
 
-                      {/* Right: Date Range & Actions */}
+                      {/* Date Range */}
                       <div className="flex items-center gap-2">
                         <Popover>
                           <PopoverTrigger asChild>
                             <button className={cn(
-                              "flex items-center gap-1 h-8 px-2.5 rounded-lg border text-xs transition-colors",
+                              "flex items-center gap-1.5 h-9 px-3 rounded-lg text-sm transition-all",
                               startDate 
-                                ? "border-primary/50 bg-primary/10 text-primary" 
-                                : "border-border/40 text-muted-foreground hover:text-foreground hover:border-border"
+                                ? "bg-primary/15 text-primary border border-primary/30" 
+                                : "bg-secondary/30 text-muted-foreground hover:text-foreground"
                             )}>
-                              <CalendarIcon className="h-3.5 w-3.5" />
-                              {startDate ? format(startDate, "MM-dd") : "开始"}
+                              <CalendarIcon className="h-4 w-4" />
+                              {startDate ? format(startDate, "yyyy-MM-dd") : "开始日期"}
                             </button>
                           </PopoverTrigger>
                           <PopoverContent className="w-auto p-0" align="end">
@@ -649,17 +674,17 @@ export default function Profile() {
                             />
                           </PopoverContent>
                         </Popover>
-                        <span className="text-muted-foreground text-xs">-</span>
+                        <span className="text-muted-foreground">-</span>
                         <Popover>
                           <PopoverTrigger asChild>
                             <button className={cn(
-                              "flex items-center gap-1 h-8 px-2.5 rounded-lg border text-xs transition-colors",
+                              "flex items-center gap-1.5 h-9 px-3 rounded-lg text-sm transition-all",
                               endDate 
-                                ? "border-primary/50 bg-primary/10 text-primary" 
-                                : "border-border/40 text-muted-foreground hover:text-foreground hover:border-border"
+                                ? "bg-primary/15 text-primary border border-primary/30" 
+                                : "bg-secondary/30 text-muted-foreground hover:text-foreground"
                             )}>
-                              <CalendarIcon className="h-3.5 w-3.5" />
-                              {endDate ? format(endDate, "MM-dd") : "结束"}
+                              <CalendarIcon className="h-4 w-4" />
+                              {endDate ? format(endDate, "yyyy-MM-dd") : "结束日期"}
                             </button>
                           </PopoverTrigger>
                           <PopoverContent className="w-auto p-0" align="end">
@@ -673,37 +698,12 @@ export default function Profile() {
                         </Popover>
                         {(startDate || endDate) && (
                           <button
-                            className="h-8 w-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
+                            className="h-9 w-9 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
                             onClick={() => { setStartDate(undefined); setEndDate(undefined); }}
                           >
-                            <X className="h-3.5 w-3.5" />
+                            <X className="h-4 w-4" />
                           </button>
                         )}
-
-                        {/* Divider */}
-                        <div className="w-px h-5 bg-border/40" />
-
-                        {/* Sort */}
-                        <button
-                          onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}
-                          className="flex items-center gap-1 h-8 px-2.5 rounded-lg border border-border/40 text-xs text-muted-foreground hover:text-foreground hover:border-border transition-colors"
-                        >
-                          {sortOrder === "desc" ? <ArrowDown className="h-3.5 w-3.5" /> : <ArrowUp className="h-3.5 w-3.5" />}
-                          {sortOrder === "desc" ? "最新" : "最早"}
-                        </button>
-
-                        {/* Batch Select */}
-                        <button 
-                          onClick={toggleBatchSelectMode}
-                          className={cn(
-                            "h-8 px-3 rounded-lg text-xs font-medium transition-colors",
-                            batchSelectMode 
-                              ? "bg-primary text-primary-foreground" 
-                              : "bg-secondary/50 text-foreground hover:bg-secondary"
-                          )}
-                        >
-                          {batchSelectMode ? "取消" : "批量选择"}
-                        </button>
                       </div>
                     </div>
 

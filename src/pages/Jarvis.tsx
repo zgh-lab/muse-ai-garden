@@ -9,12 +9,14 @@ const JarvisContent = () => {
       <AppSidebar />
       
       <div className="flex-1 flex flex-col relative z-20">
-        <header className="sticky top-0 z-10 flex h-16 items-center gap-4 bg-background/80 backdrop-blur-xl border-b border-border/50 supports-[backdrop-filter]:bg-background/60 px-6 shadow-sm">
+        {/* Header */}
+        <header className="sticky top-0 z-10 flex h-14 items-center gap-4 glass border-b border-border/30 px-6">
           <div className="flex-1" />
           <UserMenu />
         </header>
 
-        <main className="flex-1 overflow-hidden p-6 animate-fade-in">
+        {/* Main Content */}
+        <main className="flex-1 overflow-hidden animate-fade-in">
           <JarvisChat />
         </main>
       </div>
@@ -25,7 +27,12 @@ const JarvisContent = () => {
 const Jarvis = () => {
   return (
     <SidebarProvider defaultOpen={false}>
-      <div className="min-h-screen flex w-full bg-background bg-gradient-to-br from-background via-background to-background/90">
+      <div className="min-h-screen flex w-full bg-background relative overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-mesh pointer-events-none" />
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[100px] pointer-events-none" />
+        
         <JarvisContent />
       </div>
     </SidebarProvider>

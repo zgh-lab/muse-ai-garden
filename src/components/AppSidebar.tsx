@@ -1,7 +1,16 @@
-import { Bot, Sparkles, User, ChevronDown, Menu } from "lucide-react";
+import { Bot, Sparkles, User, ChevronDown, Menu, Plus, Search, MoreHorizontal, Pencil, Archive, Trash2, Check, X, MessageSquare } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
@@ -29,6 +38,13 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
+interface ChatHistory {
+  id: string;
+  title: string;
+  timestamp: string;
+  isArchived?: boolean;
+}
+
 const navItems = [
   { title: "G社 贾维斯", url: "/jarvis", icon: Bot },
   { 
@@ -44,16 +60,80 @@ const navItems = [
 
 interface AppSidebarProps {
   onHoverExpandChange?: (isHoverExpanded: boolean) => void;
+  onNewChat?: () => void;
+  onSelectChat?: (chatId: string) => void;
 }
 
-export function AppSidebar({ onHoverExpandChange }: AppSidebarProps) {
+export function AppSidebar({ onHoverExpandChange, onNewChat, onSelectChat }: AppSidebarProps) {
   const { state } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname;
   const [openGroups, setOpenGroups] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [editingChatId, setEditingChatId] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState("");
 
   const isCollapsed = state === "collapsed";
+  const isJarvisPage = currentPath === "/" || currentPath === "/jarvis";
+
+  // Chat histories state
+  const [chatHistories, setChatHistories] = useState<ChatHistory[]>(() => {
+    const saved = localStorage.getItem('chatHistories');
+    if (saved) {
+      return JSON.parse(saved);
+    }
+    return [
+      { id: "1", title: "AI图片生成讨论", timestamp: "2小时前", isArchived: false },
+      { id: "2", title: "视频剪辑技巧", timestamp: "昨天", isArchived: false },
+      { id: "3", title: "音频处理咨询", timestamp: "3天前", isArchived: false },
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('chatHistories', JSON.stringify(chatHistories));
+  }, [chatHistories]);
+
+  const handleDeleteHistory = (id: string) => {
+    setChatHistories(prev => prev.filter(chat => chat.id !== id));
+  };
+
+  const handleStartRename = (id: string, currentTitle: string) => {
+    setEditingChatId(id);
+    setEditingTitle(currentTitle);
+  };
+
+  const handleRenameChat = (id: string) => {
+    if (editingTitle.trim()) {
+      setChatHistories(prev => 
+        prev.map(chat => 
+          chat.id === id ? { ...chat, title: editingTitle.trim() } : chat
+        )
+      );
+    }
+    setEditingChatId(null);
+    setEditingTitle("");
+  };
+
+  const handleCancelRename = () => {
+    setEditingChatId(null);
+    setEditingTitle("");
+  };
+
+  const handleArchiveChat = (chatId: string) => {
+    setChatHistories(prev => 
+      prev.map(chat => 
+        chat.id === chatId ? { ...chat, isArchived: true } : chat
+      )
+    );
+  };
+
+  const filteredChats = chatHistories.filter(chat => 
+    !chat.isArchived && (
+      searchQuery === "" || 
+      chat.title.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
 
   const isGroupActive = (item: typeof navItems[number]) => {
     if (!item.subItems) return false;
@@ -240,6 +320,94 @@ export function AppSidebar({ onHoverExpandChange }: AppSidebarProps) {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
+
+          {/* Jarvis Chat History - Only show on Jarvis page and when expanded */}
+          {isJarvisPage && !isCollapsed && (
+            <SidebarGroup className="flex-1 flex flex-col min-h-0 border-t border-border/30">
+              <div className="px-3 py-3">
+                <Button 
+                  onClick={onNewChat}
+                  className="w-full justify-center gap-2 h-9 text-sm"
+                  variant="default"
+                >
+                  <Plus className="h-4 w-4" />
+                  新建对话
+                </Button>
+              </div>
+              
+              <div className="px-3 pb-2">
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                  <Input
+                    placeholder="搜索历史..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-8 h-8 text-xs bg-secondary/40 border-0"
+                  />
+                </div>
+              </div>
+              
+              <ScrollArea className="flex-1 px-2">
+                <div className="space-y-0.5 pb-2">
+                  {filteredChats.map((chat) => (
+                    <div key={chat.id} className="group relative">
+                      {editingChatId === chat.id ? (
+                        <div className="flex items-center gap-1 p-1 bg-secondary/50 rounded-lg">
+                          <Input
+                            value={editingTitle}
+                            onChange={(e) => setEditingTitle(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') handleRenameChat(chat.id);
+                              else if (e.key === 'Escape') handleCancelRename();
+                            }}
+                            className="h-7 text-xs border-0 bg-transparent"
+                            autoFocus
+                          />
+                          <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => handleRenameChat(chat.id)}>
+                            <Check className="h-3 w-3 text-success" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={handleCancelRename}>
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center">
+                          <button 
+                            onClick={() => onSelectChat?.(chat.id)}
+                            className="flex-1 text-left px-2.5 py-2 rounded-lg text-xs hover:bg-secondary/60 transition-all duration-200"
+                          >
+                            <div className="flex items-center gap-2">
+                              <MessageSquare className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                              <span className="truncate text-foreground/90">{chat.title}</span>
+                            </div>
+                            <div className="text-[10px] text-muted-foreground mt-0.5 ml-5">{chat.timestamp}</div>
+                          </button>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-all duration-200">
+                                <MoreHorizontal className="h-3.5 w-3.5" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-32 rounded-lg">
+                              <DropdownMenuItem onClick={() => handleStartRename(chat.id, chat.title)} className="text-xs">
+                                <Pencil className="h-3.5 w-3.5 mr-2" />重命名
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleArchiveChat(chat.id)} className="text-xs">
+                                <Archive className="h-3.5 w-3.5 mr-2" />归档
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleDeleteHistory(chat.id)} className="text-destructive text-xs">
+                                <Trash2 className="h-3.5 w-3.5 mr-2" />删除
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </SidebarGroup>
+          )}
         </SidebarContent>
       </Sidebar>
     </TooltipProvider>

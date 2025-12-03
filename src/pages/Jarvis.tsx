@@ -1,16 +1,15 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { UserMenu } from "@/components/UserMenu";
 import { JarvisChat } from "@/components/JarvisChat";
 import { useCallback } from "react";
 
-const JarvisContent = () => {
+const Jarvis = () => {
   const handleNewChat = useCallback(() => {
     // Chat reset is handled internally by JarvisChat
   }, []);
 
   return (
-    <>
+    <div className="min-h-screen flex w-full bg-background">
       <AppSidebar onNewChat={handleNewChat} />
       
       <div className="flex-1 flex flex-col min-w-0">
@@ -23,17 +22,7 @@ const JarvisContent = () => {
           <JarvisChat />
         </main>
       </div>
-    </>
-  );
-};
-
-const Jarvis = () => {
-  return (
-    <SidebarProvider defaultOpen={true}>
-      <div className="min-h-screen flex w-full bg-background">
-        <JarvisContent />
-      </div>
-    </SidebarProvider>
+    </div>
   );
 };
 

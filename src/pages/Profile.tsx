@@ -466,62 +466,70 @@ export default function Profile() {
       <div className="min-h-screen flex w-full bg-background">
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-14 border-b border-border/40 bg-background/80 backdrop-blur-sm sticky top-0 z-10">
-            <div className="h-full px-5 flex items-center justify-between">
-              <div className="flex-1" />
+          {/* Minimal Header */}
+          <header className="h-14 border-b border-border/30 bg-background/95 backdrop-blur-sm sticky top-0 z-10">
+            <div className="h-full px-6 flex items-center justify-end">
               <UserMenu />
             </div>
           </header>
 
-          <main className="flex-1">
-            {/* Profile Header */}
-            <div className="bg-gradient-to-r from-primary/15 via-primary/5 to-transparent py-10 px-6 border-b border-border/40">
-              <div className="max-w-7xl mx-auto">
-                <div className="flex items-start gap-6">
-                  <Avatar className="h-20 w-20 border-4 border-background shadow-elevated">
+          <main className="flex-1 overflow-auto">
+            {/* Profile Header - Cleaner Design */}
+            <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-transparent">
+              <div className="max-w-6xl mx-auto px-6 py-8">
+                <div className="flex items-center gap-5">
+                  <Avatar className="h-16 w-16 ring-2 ring-primary/20 ring-offset-2 ring-offset-background">
                     <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" />
-                    <AvatarFallback className="text-lg font-medium">AI</AvatarFallback>
+                    <AvatarFallback className="text-lg font-medium bg-primary/10 text-primary">AI</AvatarFallback>
                   </Avatar>
-                  <div className="flex-1">
-                    <h1 className="text-2xl font-display font-semibold mb-3">稳健第一</h1>
-                    <div className="flex gap-6 text-sm text-muted-foreground">
-                      <span><span className="font-medium text-foreground">创作 0</span></span>
-                      <span><span className="font-medium text-foreground">粉丝 458</span></span>
-                      <span><span className="font-medium text-foreground">作品创作次数 0</span></span>
-                      <span><span className="font-medium text-foreground">作品应用次数 0</span></span>
+                  <div>
+                    <h1 className="text-xl font-display font-semibold text-foreground">稳健第一</h1>
+                    <div className="flex items-center gap-4 mt-2 text-sm">
+                      <span className="text-muted-foreground">创作 <span className="font-medium text-foreground">0</span></span>
+                      <span className="text-muted-foreground">粉丝 <span className="font-medium text-foreground">458</span></span>
+                      <span className="text-muted-foreground">作品创作 <span className="font-medium text-foreground">0</span></span>
+                      <span className="text-muted-foreground">作品应用 <span className="font-medium text-foreground">0</span></span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Content Tabs */}
-            <div className="max-w-7xl mx-auto px-6 py-6">
+            {/* Content Area */}
+            <div className="max-w-6xl mx-auto px-6 py-6">
               <Tabs defaultValue="assets" className="w-full">
-                <TabsList className="mb-6 grid w-full max-w-md grid-cols-2 h-11 rounded-full p-1 bg-secondary/50">
-                  <TabsTrigger value="assets" className="flex items-center gap-2 rounded-full data-[state=active]:bg-background data-[state=active]:shadow-soft">
+                {/* Tab Navigation */}
+                <TabsList className="inline-flex h-10 rounded-xl p-1 bg-secondary/60 mb-6">
+                  <TabsTrigger 
+                    value="assets" 
+                    className="flex items-center gap-2 px-4 rounded-lg text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+                  >
                     <FolderOpen className="h-4 w-4" />
                     个人资产库
                   </TabsTrigger>
-                  <TabsTrigger value="archived" className="flex items-center gap-2 rounded-full data-[state=active]:bg-background data-[state=active]:shadow-soft">
+                  <TabsTrigger 
+                    value="archived" 
+                    className="flex items-center gap-2 px-4 rounded-lg text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+                  >
                     <Archive className="h-4 w-4" />
                     已归档聊天
                   </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="assets" className="mt-6 space-y-4">
+                <TabsContent value="assets" className="space-y-5">
                   <Tabs value={assetCategory} onValueChange={setAssetCategory}>
-                    <div className="flex items-center justify-between gap-4">
-                      <TabsList>
-                        <TabsTrigger value="images" className="flex items-center gap-2">
+                    {/* Asset Type Tabs & Actions Row */}
+                    <div className="flex items-center justify-between gap-4 flex-wrap">
+                      <TabsList className="h-9 rounded-lg p-1 bg-secondary/50">
+                        <TabsTrigger value="images" className="flex items-center gap-1.5 px-3 text-sm rounded-md">
                           <ImageIcon className="h-4 w-4" />
                           图片
                         </TabsTrigger>
-                        <TabsTrigger value="videos" className="flex items-center gap-2">
+                        <TabsTrigger value="videos" className="flex items-center gap-1.5 px-3 text-sm rounded-md">
                           <Video className="h-4 w-4" />
                           视频
                         </TabsTrigger>
-                        <TabsTrigger value="audio" className="flex items-center gap-2">
+                        <TabsTrigger value="audio" className="flex items-center gap-1.5 px-3 text-sm rounded-md">
                           <Music className="h-4 w-4" />
                           音频
                         </TabsTrigger>
@@ -529,80 +537,70 @@ export default function Profile() {
 
                       <div className="flex items-center gap-2">
                         <Button
-                          variant="outline"
-                          size="icon"
+                          variant="ghost"
+                          size="sm"
                           onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}
-                          title={sortOrder === "desc" ? "最新在前" : "最早在前"}
+                          className="h-9 px-3 text-muted-foreground hover:text-foreground"
                         >
-                          <ArrowUpDown className="h-4 w-4" />
+                          {sortOrder === "desc" ? <ArrowDown className="h-4 w-4 mr-1.5" /> : <ArrowUp className="h-4 w-4 mr-1.5" />}
+                          {sortOrder === "desc" ? "最新" : "最早"}
                         </Button>
-
                         <Button 
                           variant={batchSelectMode ? "default" : "outline"}
+                          size="sm"
                           onClick={toggleBatchSelectMode}
+                          className="h-9"
                         >
                           {batchSelectMode ? "取消选择" : "批量选择"}
                         </Button>
                       </div>
                     </div>
 
-                    {/* Search Bar */}
-                    <div className="relative max-w-md mt-6">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        type="text"
-                        placeholder="搜索资产..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-9"
-                      />
-                    </div>
+                    {/* Search & Filters Row */}
+                    <div className="flex items-center gap-3 mt-4 flex-wrap">
+                      <div className="relative min-w-[200px] max-w-xs">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          type="text"
+                          placeholder="搜索资产..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="pl-9 h-9 bg-secondary/30"
+                        />
+                      </div>
 
-                    {/* Filter Options */}
-                    <div className="flex flex-wrap items-center gap-4 mt-4">
                       <Select value={selectedSource} onValueChange={setSelectedSource}>
-                        <SelectTrigger className="w-[180px]">
+                        <SelectTrigger className="w-[140px] h-9 bg-secondary/30">
                           <SelectValue placeholder="图片来源" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="all">所有图片</SelectItem>
-                          <SelectItem value="jarvis">来自G社 贾维斯</SelectItem>
-                          <SelectItem value="webhub">来自Webhub</SelectItem>
+                          <SelectItem value="jarvis">G社 贾维斯</SelectItem>
+                          <SelectItem value="webhub">Webhub</SelectItem>
                         </SelectContent>
                       </Select>
 
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center gap-2">
                         <Checkbox 
                           id="favorites" 
                           checked={showFavorites}
                           onCheckedChange={(checked) => setShowFavorites(checked as boolean)}
                         />
-                        <Label htmlFor="favorites" className="cursor-pointer">我的收藏</Label>
+                        <Label htmlFor="favorites" className="cursor-pointer text-sm">收藏</Label>
                       </div>
 
                       <Popover>
                         <PopoverTrigger asChild>
-                          <Button variant="outline" className="gap-2">
+                          <Button variant="outline" size="sm" className="h-9 gap-1.5 bg-secondary/30">
                             <Tag className="h-4 w-4" />
-                            {selectedTags.length === 0 ? (
-                              "标签"
-                            ) : (
-                              <span className="max-w-[120px] truncate">
-                                {selectedTags.join(", ")}
-                              </span>
-                            )}
-                            {selectedTags.length > 0 && (
-                              <span className="ml-1 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
-                                {selectedTags.length}
-                              </span>
-                            )}
-                            <ChevronDown className="h-4 w-4" />
+                            {selectedTags.length === 0 ? "标签" : `标签(${selectedTags.length})`}
+                            <ChevronDown className="h-3 w-3" />
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-56">
+                        <PopoverContent className="w-48 p-3">
                           <div className="space-y-2">
-                            <div className="flex items-center justify-between mb-3">
-                              <h4 className="font-medium text-sm">选择标签</h4>
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-sm font-medium">选择标签</span>
                               <Button
                                 variant="ghost"
                                 size="sm"
@@ -610,19 +608,19 @@ export default function Profile() {
                                   setManagingTags(true);
                                   setTagDialogOpen(true);
                                 }}
-                                className="h-auto py-1 px-2 text-xs"
+                                className="h-6 px-2 text-xs"
                               >
-                                管理标签
+                                管理
                               </Button>
                             </div>
                             {availableTags.map((tag) => (
-                              <div key={tag} className="flex items-center space-x-2">
+                              <div key={tag} className="flex items-center gap-2">
                                 <Checkbox
                                   id={`tag-${tag}`}
                                   checked={selectedTags.includes(tag)}
                                   onCheckedChange={() => toggleTag(tag)}
                                 />
-                                <Label htmlFor={`tag-${tag}`} className="cursor-pointer flex-1">
+                                <Label htmlFor={`tag-${tag}`} className="cursor-pointer text-sm">
                                   {tag}
                                 </Label>
                               </div>
@@ -632,83 +630,57 @@ export default function Profile() {
                       </Popover>
 
                       <div className="flex items-center gap-2 ml-auto">
-                        <div className="relative">
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant="outline"
-                                className={cn(
-                                  "w-[140px] justify-start text-left font-normal pr-8",
-                                  !startDate && "text-muted-foreground"
-                                )}
-                              >
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {startDate ? format(startDate, "yyyy-MM-dd") : "开始日期"}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar
-                                mode="single"
-                                selected={startDate}
-                                onSelect={setStartDate}
-                                initialFocus
-                                className={cn("p-3 pointer-events-auto")}
-                              />
-                            </PopoverContent>
-                          </Popover>
-                          {startDate && (
+                        <Popover>
+                          <PopoverTrigger asChild>
                             <Button
-                              variant="ghost"
-                              size="icon"
-                              className="absolute right-0 top-0 h-full w-8 hover:bg-transparent"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setStartDate(undefined);
-                              }}
+                              variant="outline"
+                              size="sm"
+                              className={cn("h-9 w-[120px] justify-start text-left bg-secondary/30", !startDate && "text-muted-foreground")}
                             >
-                              <X className="h-4 w-4" />
+                              <CalendarIcon className="mr-1.5 h-4 w-4" />
+                              {startDate ? format(startDate, "MM-dd") : "开始"}
                             </Button>
-                          )}
-                        </div>
-                        <span className="text-muted-foreground">→</span>
-                        <div className="relative">
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant="outline"
-                                className={cn(
-                                  "w-[140px] justify-start text-left font-normal pr-8",
-                                  !endDate && "text-muted-foreground"
-                                )}
-                              >
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {endDate ? format(endDate, "yyyy-MM-dd") : "结束日期"}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar
-                                mode="single"
-                                selected={endDate}
-                                onSelect={setEndDate}
-                                initialFocus
-                                className={cn("p-3 pointer-events-auto")}
-                              />
-                            </PopoverContent>
-                          </Popover>
-                          {endDate && (
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={startDate}
+                              onSelect={setStartDate}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        <span className="text-muted-foreground text-sm">-</span>
+                        <Popover>
+                          <PopoverTrigger asChild>
                             <Button
-                              variant="ghost"
-                              size="icon"
-                              className="absolute right-0 top-0 h-full w-8 hover:bg-transparent"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setEndDate(undefined);
-                              }}
+                              variant="outline"
+                              size="sm"
+                              className={cn("h-9 w-[120px] justify-start text-left bg-secondary/30", !endDate && "text-muted-foreground")}
                             >
-                              <X className="h-4 w-4" />
+                              <CalendarIcon className="mr-1.5 h-4 w-4" />
+                              {endDate ? format(endDate, "MM-dd") : "结束"}
                             </Button>
-                          )}
-                        </div>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={endDate}
+                              onSelect={setEndDate}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        {(startDate || endDate) && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-9 px-2"
+                            onClick={() => { setStartDate(undefined); setEndDate(undefined); }}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        )}
                       </div>
                     </div>
 

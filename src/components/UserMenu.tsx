@@ -16,32 +16,32 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 rounded-full hover:opacity-80 transition-opacity">
-          <Avatar className="h-8 w-8">
+        <button className="flex items-center gap-2 rounded-full hover:ring-2 hover:ring-primary/20 transition-all duration-200 p-0.5">
+          <Avatar className="h-9 w-9">
             <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" />
-            <AvatarFallback className="bg-primary text-primary-foreground text-xs">U</AvatarFallback>
+            <AvatarFallback className="bg-primary text-primary-foreground text-sm font-medium">U</AvatarFallback>
           </Avatar>
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuLabel>
+      <DropdownMenuContent align="end" className="w-52 rounded-xl p-1">
+        <DropdownMenuLabel className="px-3 py-2">
           <div className="flex flex-col">
             <span className="font-medium">AI用户</span>
             <span className="text-xs text-muted-foreground font-normal">user@example.com</span>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/settings')}>
-          <Settings className="mr-2 h-4 w-4" />
+        <DropdownMenuSeparator className="my-1" />
+        <DropdownMenuItem className="cursor-pointer rounded-lg mx-1 px-3 py-2" onClick={() => navigate('/settings')}>
+          <Settings className="mr-3 h-4 w-4" />
           账户设置
         </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/profile')}>
-          <User className="mr-2 h-4 w-4" />
+        <DropdownMenuItem className="cursor-pointer rounded-lg mx-1 px-3 py-2" onClick={() => navigate('/profile')}>
+          <User className="mr-3 h-4 w-4" />
           个人中心
         </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer text-destructive">
-          <LogOut className="mr-2 h-4 w-4" />
+        <DropdownMenuSeparator className="my-1" />
+        <DropdownMenuItem className="cursor-pointer text-destructive rounded-lg mx-1 px-3 py-2">
+          <LogOut className="mr-3 h-4 w-4" />
           退出登录
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -8,8 +8,8 @@ const JarvisContent = () => {
     <>
       <AppSidebar />
       
-      <div className="flex-1 flex flex-col">
-        <header className="h-12 border-b border-border flex items-center px-4 bg-background">
+      <div className="flex-1 flex flex-col min-w-0">
+        <header className="h-14 border-b border-border/40 flex items-center px-5 bg-background/80 backdrop-blur-sm">
           <div className="flex-1" />
           <UserMenu />
         </header>

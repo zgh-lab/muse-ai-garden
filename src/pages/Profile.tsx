@@ -498,109 +498,102 @@ export default function Profile() {
             {/* Content Area */}
             <div className="max-w-6xl mx-auto px-6 py-6">
               <Tabs defaultValue="assets" className="w-full">
-                {/* Tab Navigation */}
-                <TabsList className="inline-flex h-10 rounded-xl p-1 bg-secondary/60 mb-6">
+                {/* Main Tab Navigation */}
+                <TabsList className="inline-flex h-9 rounded-lg p-0.5 bg-secondary/40 mb-5">
                   <TabsTrigger 
                     value="assets" 
-                    className="flex items-center gap-2 px-4 rounded-lg text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+                    className="flex items-center gap-1.5 px-3 h-8 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
                   >
-                    <FolderOpen className="h-4 w-4" />
+                    <FolderOpen className="h-3.5 w-3.5" />
                     个人资产库
                   </TabsTrigger>
                   <TabsTrigger 
                     value="archived" 
-                    className="flex items-center gap-2 px-4 rounded-lg text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+                    className="flex items-center gap-1.5 px-3 h-8 rounded-md text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
                   >
-                    <Archive className="h-4 w-4" />
+                    <Archive className="h-3.5 w-3.5" />
                     已归档聊天
                   </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="assets" className="space-y-5">
+                <TabsContent value="assets" className="space-y-4">
                   <Tabs value={assetCategory} onValueChange={setAssetCategory}>
-                    {/* Asset Type Tabs & Actions Row */}
-                    <div className="flex items-center justify-between gap-4 flex-wrap">
-                      <TabsList className="h-9 rounded-lg p-1 bg-secondary/50">
-                        <TabsTrigger value="images" className="flex items-center gap-1.5 px-3 text-sm rounded-md">
-                          <ImageIcon className="h-4 w-4" />
+                    {/* Combined Filter Bar */}
+                    <div className="flex items-center gap-3 py-3 border-b border-border/30">
+                      {/* Left: Asset Type Tabs */}
+                      <TabsList className="h-8 rounded-lg p-0.5 bg-transparent border border-border/40">
+                        <TabsTrigger value="images" className="flex items-center gap-1.5 px-2.5 h-7 text-xs rounded-md data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
+                          <ImageIcon className="h-3.5 w-3.5" />
                           图片
                         </TabsTrigger>
-                        <TabsTrigger value="videos" className="flex items-center gap-1.5 px-3 text-sm rounded-md">
-                          <Video className="h-4 w-4" />
+                        <TabsTrigger value="videos" className="flex items-center gap-1.5 px-2.5 h-7 text-xs rounded-md data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
+                          <Video className="h-3.5 w-3.5" />
                           视频
                         </TabsTrigger>
-                        <TabsTrigger value="audio" className="flex items-center gap-1.5 px-3 text-sm rounded-md">
-                          <Music className="h-4 w-4" />
+                        <TabsTrigger value="audio" className="flex items-center gap-1.5 px-2.5 h-7 text-xs rounded-md data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
+                          <Music className="h-3.5 w-3.5" />
                           音频
                         </TabsTrigger>
                       </TabsList>
 
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}
-                          className="h-9 px-3 text-muted-foreground hover:text-foreground"
-                        >
-                          {sortOrder === "desc" ? <ArrowDown className="h-4 w-4 mr-1.5" /> : <ArrowUp className="h-4 w-4 mr-1.5" />}
-                          {sortOrder === "desc" ? "最新" : "最早"}
-                        </Button>
-                        <Button 
-                          variant={batchSelectMode ? "default" : "outline"}
-                          size="sm"
-                          onClick={toggleBatchSelectMode}
-                          className="h-9"
-                        >
-                          {batchSelectMode ? "取消选择" : "批量选择"}
-                        </Button>
-                      </div>
-                    </div>
+                      {/* Divider */}
+                      <div className="w-px h-5 bg-border/40" />
 
-                    {/* Search & Filters Row */}
-                    <div className="flex items-center gap-3 mt-4 flex-wrap">
-                      <div className="relative min-w-[200px] max-w-xs">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      {/* Search */}
+                      <div className="relative w-40">
+                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
                         <Input
                           type="text"
-                          placeholder="搜索资产..."
+                          placeholder="搜索..."
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
-                          className="pl-9 h-9 bg-secondary/30"
+                          className="pl-8 h-8 text-sm bg-transparent border-border/40"
                         />
                       </div>
 
+                      {/* Source Select */}
                       <Select value={selectedSource} onValueChange={setSelectedSource}>
-                        <SelectTrigger className="w-[140px] h-9 bg-secondary/30">
-                          <SelectValue placeholder="图片来源" />
+                        <SelectTrigger className="w-[100px] h-8 text-xs bg-transparent border-border/40">
+                          <SelectValue placeholder="来源" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="all">所有图片</SelectItem>
-                          <SelectItem value="jarvis">G社 贾维斯</SelectItem>
+                          <SelectItem value="all">所有</SelectItem>
+                          <SelectItem value="jarvis">贾维斯</SelectItem>
                           <SelectItem value="webhub">Webhub</SelectItem>
                         </SelectContent>
                       </Select>
 
-                      <div className="flex items-center gap-2">
-                        <Checkbox 
-                          id="favorites" 
-                          checked={showFavorites}
-                          onCheckedChange={(checked) => setShowFavorites(checked as boolean)}
-                        />
-                        <Label htmlFor="favorites" className="cursor-pointer text-sm">收藏</Label>
-                      </div>
+                      {/* Favorites Checkbox */}
+                      <button 
+                        onClick={() => setShowFavorites(!showFavorites)}
+                        className={cn(
+                          "flex items-center gap-1.5 h-8 px-2.5 rounded-lg border text-xs transition-colors",
+                          showFavorites 
+                            ? "border-primary/50 bg-primary/10 text-primary" 
+                            : "border-border/40 text-muted-foreground hover:text-foreground hover:border-border"
+                        )}
+                      >
+                        <Star className={cn("h-3.5 w-3.5", showFavorites && "fill-primary")} />
+                        收藏
+                      </button>
 
+                      {/* Tags */}
                       <Popover>
                         <PopoverTrigger asChild>
-                          <Button variant="outline" size="sm" className="h-9 gap-1.5 bg-secondary/30">
-                            <Tag className="h-4 w-4" />
-                            {selectedTags.length === 0 ? "标签" : `标签(${selectedTags.length})`}
-                            <ChevronDown className="h-3 w-3" />
-                          </Button>
+                          <button className={cn(
+                            "flex items-center gap-1.5 h-8 px-2.5 rounded-lg border text-xs transition-colors",
+                            selectedTags.length > 0
+                              ? "border-primary/50 bg-primary/10 text-primary" 
+                              : "border-border/40 text-muted-foreground hover:text-foreground hover:border-border"
+                          )}>
+                            <Tag className="h-3.5 w-3.5" />
+                            {selectedTags.length === 0 ? "标签" : `${selectedTags.length}个`}
+                          </button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-48 p-3">
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="text-sm font-medium">选择标签</span>
+                        <PopoverContent className="w-44 p-2">
+                          <div className="space-y-1">
+                            <div className="flex items-center justify-between px-1 pb-1 border-b border-border/30">
+                              <span className="text-xs font-medium">选择标签</span>
                               <Button
                                 variant="ghost"
                                 size="sm"
@@ -608,19 +601,20 @@ export default function Profile() {
                                   setManagingTags(true);
                                   setTagDialogOpen(true);
                                 }}
-                                className="h-6 px-2 text-xs"
+                                className="h-5 px-1.5 text-xs"
                               >
                                 管理
                               </Button>
                             </div>
                             {availableTags.map((tag) => (
-                              <div key={tag} className="flex items-center gap-2">
+                              <div key={tag} className="flex items-center gap-2 px-1 py-1 rounded hover:bg-secondary/50">
                                 <Checkbox
                                   id={`tag-${tag}`}
                                   checked={selectedTags.includes(tag)}
                                   onCheckedChange={() => toggleTag(tag)}
+                                  className="h-3.5 w-3.5"
                                 />
-                                <Label htmlFor={`tag-${tag}`} className="cursor-pointer text-sm">
+                                <Label htmlFor={`tag-${tag}`} className="cursor-pointer text-xs flex-1">
                                   {tag}
                                 </Label>
                               </div>
@@ -629,19 +623,24 @@ export default function Profile() {
                         </PopoverContent>
                       </Popover>
 
-                      <div className="flex items-center gap-2 ml-auto">
+                      {/* Spacer */}
+                      <div className="flex-1" />
+
+                      {/* Right: Date Range & Actions */}
+                      <div className="flex items-center gap-2">
                         <Popover>
                           <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className={cn("h-9 w-[120px] justify-start text-left bg-secondary/30", !startDate && "text-muted-foreground")}
-                            >
-                              <CalendarIcon className="mr-1.5 h-4 w-4" />
+                            <button className={cn(
+                              "flex items-center gap-1 h-8 px-2.5 rounded-lg border text-xs transition-colors",
+                              startDate 
+                                ? "border-primary/50 bg-primary/10 text-primary" 
+                                : "border-border/40 text-muted-foreground hover:text-foreground hover:border-border"
+                            )}>
+                              <CalendarIcon className="h-3.5 w-3.5" />
                               {startDate ? format(startDate, "MM-dd") : "开始"}
-                            </Button>
+                            </button>
                           </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
+                          <PopoverContent className="w-auto p-0" align="end">
                             <Calendar
                               mode="single"
                               selected={startDate}
@@ -650,19 +649,20 @@ export default function Profile() {
                             />
                           </PopoverContent>
                         </Popover>
-                        <span className="text-muted-foreground text-sm">-</span>
+                        <span className="text-muted-foreground text-xs">-</span>
                         <Popover>
                           <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className={cn("h-9 w-[120px] justify-start text-left bg-secondary/30", !endDate && "text-muted-foreground")}
-                            >
-                              <CalendarIcon className="mr-1.5 h-4 w-4" />
+                            <button className={cn(
+                              "flex items-center gap-1 h-8 px-2.5 rounded-lg border text-xs transition-colors",
+                              endDate 
+                                ? "border-primary/50 bg-primary/10 text-primary" 
+                                : "border-border/40 text-muted-foreground hover:text-foreground hover:border-border"
+                            )}>
+                              <CalendarIcon className="h-3.5 w-3.5" />
                               {endDate ? format(endDate, "MM-dd") : "结束"}
-                            </Button>
+                            </button>
                           </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
+                          <PopoverContent className="w-auto p-0" align="end">
                             <Calendar
                               mode="single"
                               selected={endDate}
@@ -672,15 +672,38 @@ export default function Profile() {
                           </PopoverContent>
                         </Popover>
                         {(startDate || endDate) && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-9 px-2"
+                          <button
+                            className="h-8 w-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
                             onClick={() => { setStartDate(undefined); setEndDate(undefined); }}
                           >
-                            <X className="h-4 w-4" />
-                          </Button>
+                            <X className="h-3.5 w-3.5" />
+                          </button>
                         )}
+
+                        {/* Divider */}
+                        <div className="w-px h-5 bg-border/40" />
+
+                        {/* Sort */}
+                        <button
+                          onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}
+                          className="flex items-center gap-1 h-8 px-2.5 rounded-lg border border-border/40 text-xs text-muted-foreground hover:text-foreground hover:border-border transition-colors"
+                        >
+                          {sortOrder === "desc" ? <ArrowDown className="h-3.5 w-3.5" /> : <ArrowUp className="h-3.5 w-3.5" />}
+                          {sortOrder === "desc" ? "最新" : "最早"}
+                        </button>
+
+                        {/* Batch Select */}
+                        <button 
+                          onClick={toggleBatchSelectMode}
+                          className={cn(
+                            "h-8 px-3 rounded-lg text-xs font-medium transition-colors",
+                            batchSelectMode 
+                              ? "bg-primary text-primary-foreground" 
+                              : "bg-secondary/50 text-foreground hover:bg-secondary"
+                          )}
+                        >
+                          {batchSelectMode ? "取消" : "批量选择"}
+                        </button>
                       </div>
                     </div>
 

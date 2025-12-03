@@ -131,11 +131,10 @@ export function AppSidebar({ onHoverExpandChange, onNewChat, onSelectChat }: App
               <div className="w-full flex items-center justify-between">
                 <button 
                   onClick={() => navigate('/')}
-                  className="flex items-center gap-1 hover:opacity-80 transition-opacity"
+                  className="flex items-center hover:opacity-80 transition-opacity"
                   title="返回首页"
                 >
-                  <span className="font-display font-bold text-primary text-sm">B</span>
-                  <span className="font-display font-medium text-primary text-sm">lueWhale</span>
+                  <span className="font-display text-primary text-sm"><span className="font-bold">B</span><span className="font-medium">lueWhale</span></span>
                 </button>
                 <button
                   onClick={() => setIsNavExpanded(false)}

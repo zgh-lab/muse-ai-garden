@@ -77,7 +77,7 @@ export function AppSidebar({ onHoverExpandChange }: AppSidebarProps) {
         <SidebarContent className="pt-0">
           <SidebarGroup>
             {/* Header */}
-            <div className={`flex items-center border-b border-border/30 ${isCollapsed ? 'justify-center py-4' : 'px-4 py-4 gap-3'}`}>
+            <div className={`flex items-center border-b border-border/30 ${isCollapsed ? 'flex-col py-3 px-1' : 'px-4 py-4 gap-3'}`}>
               {!isCollapsed && (
                 <span 
                   className="font-display font-semibold text-primary text-lg cursor-pointer tracking-tight"
@@ -86,14 +86,14 @@ export function AppSidebar({ onHoverExpandChange }: AppSidebarProps) {
                   BlueWhale
                 </span>
               )}
-              <SidebarTrigger className={`h-9 w-9 rounded-xl hover:bg-secondary/80 transition-colors ${isCollapsed ? '' : 'ml-auto'}`}>
-                <Menu className="h-5 w-5" />
+              <SidebarTrigger className={`h-8 w-8 rounded-lg hover:bg-secondary/80 transition-colors flex items-center justify-center ${isCollapsed ? '' : 'ml-auto'}`}>
+                <Menu className="h-4 w-4" />
               </SidebarTrigger>
             </div>
             
             {/* Navigation */}
-            <SidebarGroupContent className={`py-4 ${isCollapsed ? 'px-2' : 'px-3'}`}>
-              <SidebarMenu className={isCollapsed ? 'space-y-2' : 'space-y-1'}>
+            <SidebarGroupContent className={`${isCollapsed ? 'py-3 px-1' : 'py-4 px-3'}`}>
+              <SidebarMenu className={isCollapsed ? 'space-y-1 flex flex-col items-center' : 'space-y-1'}>
                 {navItems.map((item) => {
                   if (item.subItems) {
                     const isActive = isGroupActive(item);
@@ -101,17 +101,17 @@ export function AppSidebar({ onHoverExpandChange }: AppSidebarProps) {
                     
                     if (isCollapsed) {
                       return (
-                        <SidebarMenuItem key={item.title}>
+                        <SidebarMenuItem key={item.title} className="w-full flex justify-center">
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <SidebarMenuButton
-                                className={`flex items-center justify-center w-10 h-10 mx-auto rounded-xl transition-all duration-200 ${
+                                className={`flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200 ${
                                   isActive 
                                     ? 'bg-primary/15 text-primary' 
                                     : 'text-muted-foreground hover:bg-secondary/80 hover:text-foreground'
                                 }`}
                               >
-                                <item.icon className="h-5 w-5" />
+                                <item.icon className="h-[18px] w-[18px]" />
                               </SidebarMenuButton>
                             </TooltipTrigger>
                             <TooltipContent side="right" className="flex flex-col gap-1 p-2">
@@ -193,20 +193,20 @@ export function AppSidebar({ onHoverExpandChange }: AppSidebarProps) {
                   
                   if (isCollapsed) {
                     return (
-                      <SidebarMenuItem key={item.title}>
+                      <SidebarMenuItem key={item.title} className="w-full flex justify-center">
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <SidebarMenuButton asChild isActive={isActive}>
                               <NavLink
                                 to={item.url}
-                                className={`flex items-center justify-center w-10 h-10 mx-auto rounded-xl transition-all duration-200 ${
+                                className={`flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200 ${
                                   isActive 
                                     ? 'bg-primary/15 text-primary' 
                                     : 'text-muted-foreground hover:bg-secondary/80 hover:text-foreground'
                                 }`}
                                 activeClassName="bg-primary/15 text-primary"
                               >
-                                <item.icon className="h-5 w-5" />
+                                <item.icon className="h-[18px] w-[18px]" />
                               </NavLink>
                             </SidebarMenuButton>
                           </TooltipTrigger>

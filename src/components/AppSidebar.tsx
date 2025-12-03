@@ -70,7 +70,7 @@ export function AppSidebar({ onHoverExpandChange }: AppSidebarProps) {
             <SidebarTrigger className="h-8 w-8 ml-auto rounded-full" />
           </div>
           
-          <SidebarGroupContent className="px-3 py-3">
+          <SidebarGroupContent className={`py-3 ${isCollapsed ? 'px-2' : 'px-3'}`}>
             <SidebarMenu className="space-y-1">
               {navItems.map((item) => {
                 if (item.subItems) {
@@ -98,7 +98,9 @@ export function AppSidebar({ onHoverExpandChange }: AppSidebarProps) {
                                 setOpenGroups(prev => [...prev, item.title]);
                               }
                             }}
-                            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${
+                            className={`flex items-center gap-3 py-2.5 rounded-xl transition-all duration-200 ${
+                              isCollapsed ? 'justify-center px-0' : 'px-3'
+                            } ${
                               isActive ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-secondary/60 hover:text-foreground'
                             }`}
                           >
@@ -143,7 +145,9 @@ export function AppSidebar({ onHoverExpandChange }: AppSidebarProps) {
                     <SidebarMenuButton asChild isActive={isActive}>
                       <NavLink
                         to={item.url}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${
+                        className={`flex items-center gap-3 py-2.5 rounded-xl transition-all duration-200 ${
+                          isCollapsed ? 'justify-center px-0' : 'px-3'
+                        } ${
                           isActive ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-secondary/60 hover:text-foreground'
                         }`}
                         activeClassName="bg-primary/10 text-primary"

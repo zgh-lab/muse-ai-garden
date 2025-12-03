@@ -1,4 +1,4 @@
-import { Home, Sparkles, MoreHorizontal, User, Bot, ChevronDown, Zap } from "lucide-react";
+import { Bot, Sparkles, User, ChevronDown } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -55,40 +55,24 @@ export function AppSidebar({ onHoverExpandChange }: AppSidebarProps) {
   };
 
   return (
-    <Sidebar 
-      collapsible="icon" 
-      className="!border-r border-border/30 bg-sidebar/80 backdrop-blur-xl"
-    >
-      <SidebarContent className="pt-0 flex flex-col justify-start bg-gradient-to-b from-sidebar via-sidebar to-sidebar/95">
+    <Sidebar collapsible="icon" className="border-r border-border">
+      <SidebarContent className="pt-0 bg-sidebar">
         <SidebarGroup>
-          {/* Logo Area */}
-          <div className="px-3 py-4 flex items-center gap-3 min-w-0 border-b border-border/30">
-            {!isCollapsed ? (
-              <div className="flex items-center gap-2 animate-fade-in">
-                <div className="relative">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center shadow-glow">
-                    <Zap className="h-4 w-4 text-primary-foreground" />
-                  </div>
-                  <div className="absolute inset-0 rounded-lg bg-gradient-primary opacity-50 blur-md -z-10" />
-                </div>
-                <h2 
-                  className="text-base font-display font-bold text-gradient-primary cursor-pointer hover:opacity-90 transition-opacity" 
-                  onClick={() => navigate('/')}
-                >
-                  BlueWhale
-                </h2>
-              </div>
-            ) : (
-              <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center shadow-glow mx-auto">
-                <Zap className="h-4 w-4 text-primary-foreground" />
-              </div>
+          <div className="px-3 py-3 flex items-center gap-2 border-b border-border">
+            {!isCollapsed && (
+              <span 
+                className="font-semibold text-primary cursor-pointer"
+                onClick={() => navigate('/')}
+              >
+                BlueWhale
+              </span>
             )}
-            <SidebarTrigger className="h-7 w-7 shrink-0 ml-auto hover:bg-sidebar-accent rounded-lg transition-all duration-200 text-muted-foreground hover:text-foreground" />
+            <SidebarTrigger className="h-7 w-7 ml-auto" />
           </div>
           
-          <SidebarGroupContent className="px-2 py-3">
-            <SidebarMenu className="space-y-1">
-              {navItems.map((item, index) => {
+          <SidebarGroupContent className="px-2 py-2">
+            <SidebarMenu className="space-y-0.5">
+              {navItems.map((item) => {
                 if (item.subItems) {
                   const isActive = isGroupActive(item);
                   const isOpen = openGroups.includes(item.title);
@@ -99,19 +83,13 @@ export function AppSidebar({ onHoverExpandChange }: AppSidebarProps) {
                       open={isOpen}
                       onOpenChange={(open) => {
                         setOpenGroups(prev => 
-                          open 
-                            ? [...prev, item.title]
-                            : prev.filter(g => g !== item.title)
+                          open ? [...prev, item.title] : prev.filter(g => g !== item.title)
                         );
                       }}
                       className="group/collapsible"
                     >
                       <SidebarMenuItem
-                        onMouseLeave={() => {
-                          setOpenGroups(prev => prev.filter(g => g !== item.title));
-                        }}
-                        className="animate-fade-in"
-                        style={{ animationDelay: `${index * 50}ms` }}
+                        onMouseLeave={() => setOpenGroups(prev => prev.filter(g => g !== item.title))}
                       >
                         <CollapsibleTrigger asChild>
                           <SidebarMenuButton
@@ -120,36 +98,34 @@ export function AppSidebar({ onHoverExpandChange }: AppSidebarProps) {
                                 setOpenGroups(prev => [...prev, item.title]);
                               }
                             }}
-                            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
-                              isActive 
-                                ? 'bg-gradient-primary-soft border border-primary/20 text-foreground shadow-sm' 
-                                : 'hover:bg-sidebar-accent/80 text-muted-foreground hover:text-foreground'
+                            className={`flex items-center gap-2 px-2 py-2 rounded-lg transition-colors ${
+                              isActive ? 'bg-secondary text-foreground' : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
                             }`}
                           >
-                            <item.icon className={`h-4 w-4 shrink-0 transition-all duration-200 group-hover:scale-110 ${isActive ? 'text-primary' : ''}`} />
+                            <item.icon className="h-4 w-4" />
                             {!isCollapsed && (
                               <>
-                                <span className="flex-1 text-sm font-medium">{item.title}</span>
-                                <ChevronDown className="h-3.5 w-3.5 opacity-50 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180" />
+                                <span className="flex-1 text-sm">{item.title}</span>
+                                <ChevronDown className="h-3 w-3 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                               </>
                             )}
                           </SidebarMenuButton>
                         </CollapsibleTrigger>
-                        <CollapsibleContent className="animate-accordion-down">
-                          <SidebarMenuSub className="ml-3 mt-1 space-y-0.5 border-l border-border/30 pl-3">
+                        <CollapsibleContent>
+                          <SidebarMenuSub className="ml-4 mt-1 space-y-0.5 border-l border-border pl-2">
                             {item.subItems.map((subItem) => (
                               <SidebarMenuSubItem key={subItem.title}>
                                 <SidebarMenuSubButton asChild isActive={currentPath === subItem.url}>
                                   <NavLink
                                     to={subItem.url}
-                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-sm ${
+                                    className={`px-2 py-1.5 rounded text-sm transition-colors ${
                                       currentPath === subItem.url
-                                        ? 'bg-primary/10 text-primary font-medium'
-                                        : 'text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground'
+                                        ? 'text-primary'
+                                        : 'text-muted-foreground hover:text-foreground'
                                     }`}
-                                    activeClassName="bg-primary/10 text-primary font-medium"
+                                    activeClassName="text-primary"
                                   >
-                                    {!isCollapsed && <span>{subItem.title}</span>}
+                                    {!isCollapsed && subItem.title}
                                   </NavLink>
                                 </SidebarMenuSubButton>
                               </SidebarMenuSubItem>
@@ -163,23 +139,17 @@ export function AppSidebar({ onHoverExpandChange }: AppSidebarProps) {
                 
                 const isActive = currentPath === item.url;
                 return (
-                  <SidebarMenuItem 
-                    key={item.title}
-                    className="animate-fade-in"
-                    style={{ animationDelay: `${index * 50}ms` }}
-                  >
+                  <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild isActive={isActive}>
                       <NavLink
                         to={item.url}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
-                          isActive 
-                            ? 'bg-gradient-primary-soft border border-primary/20 text-foreground shadow-sm' 
-                            : 'hover:bg-sidebar-accent/80 text-muted-foreground hover:text-foreground'
+                        className={`flex items-center gap-2 px-2 py-2 rounded-lg transition-colors ${
+                          isActive ? 'bg-secondary text-foreground' : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
                         }`}
-                        activeClassName="bg-gradient-primary-soft border border-primary/20 text-foreground shadow-sm"
+                        activeClassName="bg-secondary text-foreground"
                       >
-                        <item.icon className={`h-4 w-4 shrink-0 transition-all duration-200 group-hover:scale-110 ${isActive ? 'text-primary' : ''}`} />
-                        {!isCollapsed && <span className="text-sm font-medium">{item.title}</span>}
+                        <item.icon className="h-4 w-4" />
+                        {!isCollapsed && <span className="text-sm">{item.title}</span>}
                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

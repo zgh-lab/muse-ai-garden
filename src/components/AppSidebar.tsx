@@ -52,6 +52,7 @@ export function AppSidebar({ onHoverExpandChange, onNewChat, onSelectChat }: App
   const [editingChatId, setEditingChatId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState("");
   const [isPanelOpen, setIsPanelOpen] = useState(true);
+  const [isNavExpanded, setIsNavExpanded] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   const isJarvisPage = currentPath === "/" || currentPath === "/jarvis";
@@ -122,20 +123,21 @@ export function AppSidebar({ onHoverExpandChange, onNewChat, onSelectChat }: App
   return (
     <TooltipProvider delayDuration={0}>
       <div className="flex h-screen">
-        {/* Left Column - Icon Navigation (Always visible) */}
-        <div className="w-14 bg-sidebar flex flex-col border-r border-sidebar-border shrink-0">
+        {/* Left Column - Icon Navigation (Expandable) */}
+        <div className={`${isNavExpanded ? 'w-44' : 'w-14'} bg-sidebar flex flex-col border-r border-sidebar-border shrink-0 transition-all duration-300`}>
           {/* Logo */}
-          <div className="h-14 flex items-center justify-center border-b border-sidebar-border">
+          <div className="h-14 flex items-center px-3 border-b border-sidebar-border">
             <button 
               onClick={() => navigate('/')}
-              className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center hover:bg-primary/25 transition-colors"
+              className={`${isNavExpanded ? 'w-full justify-start gap-2 px-2' : 'w-9 justify-center mx-auto'} h-9 rounded-xl bg-primary/15 flex items-center hover:bg-primary/25 transition-all duration-300`}
             >
-              <span className="font-display font-bold text-primary text-sm">B</span>
+              <span className="font-display font-bold text-primary text-sm shrink-0">B</span>
+              {isNavExpanded && <span className="font-display font-medium text-primary text-sm truncate">lueWhale</span>}
             </button>
           </div>
 
           {/* Navigation Icons */}
-          <nav className="flex-1 flex flex-col items-center py-3 gap-1">
+          <nav className="flex-1 flex flex-col py-3 gap-1 px-2">
             {navItems.map((item) => {
               const isActive = item.url ? currentPath === item.url : isGroupActive(item);
               const hasSubItems = !!item.subItems;
@@ -152,35 +154,39 @@ export function AppSidebar({ onHoverExpandChange, onNewChat, onSelectChat }: App
                       {item.url ? (
                         <NavLink
                           to={item.url}
-                          className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${
+                          className={`${isNavExpanded ? 'w-full justify-start px-3 gap-3' : 'w-10 justify-center mx-auto'} h-10 rounded-xl flex items-center transition-all duration-200 ${
                             isActive 
                               ? 'bg-primary/15 text-primary' 
                               : 'text-muted-foreground hover:bg-sidebar-accent hover:text-foreground'
                           }`}
                           activeClassName="bg-primary/15 text-primary"
                         >
-                          <item.icon className="h-5 w-5" />
+                          <item.icon className="h-5 w-5 shrink-0" />
+                          {isNavExpanded && <span className="text-sm truncate">{item.title}</span>}
                         </NavLink>
                       ) : (
                         <button
-                          className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${
+                          className={`${isNavExpanded ? 'w-full justify-start px-3 gap-3' : 'w-10 justify-center mx-auto'} h-10 rounded-xl flex items-center transition-all duration-200 ${
                             isActive 
                               ? 'bg-primary/15 text-primary' 
                               : 'text-muted-foreground hover:bg-sidebar-accent hover:text-foreground'
                           }`}
                         >
-                          <item.icon className="h-5 w-5" />
+                          <item.icon className="h-5 w-5 shrink-0" />
+                          {isNavExpanded && <span className="text-sm truncate">{item.title}</span>}
                         </button>
                       )}
                     </TooltipTrigger>
-                    <TooltipContent side="right" sideOffset={8}>
-                      {item.title}
-                    </TooltipContent>
+                    {!isNavExpanded && (
+                      <TooltipContent side="right" sideOffset={8}>
+                        {item.title}
+                      </TooltipContent>
+                    )}
                   </Tooltip>
 
                   {/* Sub-items dropdown on hover */}
                   {hasSubItems && hoveredItem === item.title && (
-                    <div className="absolute left-full top-0 ml-2 z-50 animate-fade-in">
+                    <div className={`absolute ${isNavExpanded ? 'left-full top-0 ml-2' : 'left-full top-0 ml-2'} z-50 animate-fade-in`}>
                       <div className="bg-popover border border-border rounded-xl p-2 shadow-lg min-w-[160px]">
                         {item.subItems?.map((subItem) => (
                           <NavLink
@@ -203,32 +209,65 @@ export function AppSidebar({ onHoverExpandChange, onNewChat, onSelectChat }: App
             })}
           </nav>
 
-          {/* Panel Toggle (only on Jarvis page) */}
-          {isJarvisPage && (
-            <div className="pb-3 flex justify-center">
+          {/* Nav Toggle Button */}
+          <div className="pb-3 px-2 space-y-1">
+            {/* Panel Toggle (only on Jarvis page when panel is closed) */}
+            {isJarvisPage && !isPanelOpen && (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
-                    onClick={() => setIsPanelOpen(!isPanelOpen)}
-                    className="w-10 h-10 rounded-xl flex items-center justify-center text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-all duration-200"
+                    onClick={() => setIsPanelOpen(true)}
+                    className={`${isNavExpanded ? 'w-full justify-start px-3 gap-3' : 'w-10 justify-center mx-auto'} h-10 rounded-xl flex items-center text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-all duration-200`}
                   >
-                    {isPanelOpen ? <PanelLeftClose className="h-5 w-5" /> : <PanelLeft className="h-5 w-5" />}
+                    <MessageSquare className="h-5 w-5 shrink-0" />
+                    {isNavExpanded && <span className="text-sm">对话历史</span>}
                   </button>
                 </TooltipTrigger>
-                <TooltipContent side="right" sideOffset={8}>
-                  {isPanelOpen ? '收起面板' : '展开面板'}
-                </TooltipContent>
+                {!isNavExpanded && (
+                  <TooltipContent side="right" sideOffset={8}>
+                    打开对话历史
+                  </TooltipContent>
+                )}
               </Tooltip>
-            </div>
-          )}
+            )}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setIsNavExpanded(!isNavExpanded)}
+                  className={`${isNavExpanded ? 'w-full justify-start px-3 gap-3' : 'w-10 justify-center mx-auto'} h-10 rounded-xl flex items-center text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-all duration-200`}
+                >
+                  {isNavExpanded ? <PanelLeftClose className="h-5 w-5 shrink-0" /> : <PanelLeft className="h-5 w-5" />}
+                  {isNavExpanded && <span className="text-sm">收起导航</span>}
+                </button>
+              </TooltipTrigger>
+              {!isNavExpanded && (
+                <TooltipContent side="right" sideOffset={8}>
+                  展开导航
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </div>
         </div>
 
         {/* Right Column - Context Panel (Chat History) */}
         {isJarvisPage && isPanelOpen && (
           <div className="w-56 bg-sidebar/50 flex flex-col border-r border-sidebar-border animate-fade-in">
             {/* Panel Header */}
-            <div className="h-14 flex items-center px-4 border-b border-sidebar-border">
+            <div className="h-14 flex items-center justify-between px-4 border-b border-sidebar-border">
               <span className="text-sm font-medium text-foreground">对话历史</span>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setIsPanelOpen(false)}
+                    className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-all duration-200"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="right" sideOffset={8}>
+                  关闭面板
+                </TooltipContent>
+              </Tooltip>
             </div>
 
             {/* New Chat Button */}

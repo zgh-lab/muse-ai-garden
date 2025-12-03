@@ -420,36 +420,16 @@ export function JarvisChat() {
   };
 
   return (
-    <div className="flex h-full w-full gap-4 relative overflow-hidden">
-      {/* Enhanced Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/5 to-accent/10 pointer-events-none" />
-      <div 
-        className="absolute inset-0 bg-gradient-to-tr from-transparent via-primary/10 to-transparent pointer-events-none animate-pulse"
-        style={{ animationDuration: '8s' }}
-      />
-      <div 
-        className="absolute inset-0 pointer-events-none opacity-20"
-        style={{
-          backgroundImage: `radial-gradient(circle at 2px 2px, hsl(var(--primary) / 0.2) 1px, transparent 0)`,
-          backgroundSize: '40px 40px',
-        }}
-      />
-      <div 
-        className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none animate-pulse"
-        style={{ animationDuration: '15s' }}
-      />
-      <div 
-        className="absolute bottom-0 left-0 w-80 h-80 bg-accent/10 rounded-full blur-3xl pointer-events-none animate-pulse"
-        style={{ animationDuration: '20s', animationDelay: '5s' }}
-      />
+    <div className="flex h-full w-full gap-4 relative overflow-hidden p-4">
+      {/* Subtle Background */}
+      <div className="absolute inset-0 dot-pattern opacity-30 pointer-events-none" />
       
       {/* Left Sidebar */}
-      <Card className="w-64 flex flex-col bg-card/50 backdrop-blur-sm border-border relative z-10">
+      <Card className="w-64 flex flex-col glass-strong border-border/30 rounded-2xl relative z-10 shadow-card">
         <div className="p-4 space-y-4">
           <Button 
             onClick={handleNewChat}
-            className="w-full justify-start gap-2"
-            variant="outline"
+            className="w-full justify-start gap-3 h-11 bg-gradient-primary hover:opacity-90 text-primary-foreground font-medium rounded-xl shadow-glow transition-all duration-200"
           >
             <Plus className="h-4 w-4" />
             新对话
@@ -607,17 +587,19 @@ export function JarvisChat() {
       {/* Main Chat Area and Asset Library */}
       <ResizablePanelGroup direction="horizontal" className="flex-1 relative z-10">
         <ResizablePanel defaultSize={showAssetLibrary ? 70 : 100} minSize={40} className="overflow-visible">
-          <Card className={`h-full flex flex-col ${currentTheme.bgColor} border-border relative overflow-visible`}>
+          <Card className="h-full flex flex-col glass-strong border-border/30 rounded-2xl relative overflow-visible shadow-card">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-border">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between p-4 border-b border-border/30">
+          <div className="flex items-center gap-4">
             <div className="relative">
-              <img src={jarvisIcon} alt="Jarvis" className="h-10 w-10 rounded-full" />
-              <div className="absolute -bottom-1 -right-1 h-3.5 w-3.5 bg-green-500 border-2 border-background rounded-full" />
+              <div className="h-12 w-12 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
+                <img src={jarvisIcon} alt="Jarvis" className="h-8 w-8" />
+              </div>
+              <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 bg-success rounded-full border-2 border-card animate-pulse-soft" />
             </div>
             <div>
-              <h3 className="font-semibold text-foreground">G社 贾维斯</h3>
-              <p className="text-xs text-muted-foreground">AI助手</p>
+              <h3 className="font-display font-semibold text-foreground text-lg">G社 贾维斯</h3>
+              <p className="text-xs text-muted-foreground">智能AI助手 · 在线</p>
             </div>
           </div>
           
@@ -625,7 +607,7 @@ export function JarvisChat() {
           <Button
             variant={showAssetLibrary ? "default" : "outline"}
             onClick={() => setShowAssetLibrary(!showAssetLibrary)}
-            className="gap-2 shadow-sm hover:shadow-md transition-all"
+            className={`gap-2 rounded-xl transition-all duration-200 ${showAssetLibrary ? 'bg-gradient-primary text-primary-foreground shadow-glow' : 'hover:border-primary/50'}`}
           >
             <Library className="h-4 w-4" />
             <span className="font-medium">个人资产库</span>
@@ -633,28 +615,31 @@ export function JarvisChat() {
         </div>
 
         {/* Messages */}
-        <ScrollArea className="flex-1 p-4 pb-40">
-          <div className="space-y-4 max-w-3xl mx-auto">
+        <ScrollArea className="flex-1 p-6 pb-44">
+          <div className="space-y-6 max-w-3xl mx-auto">
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`flex gap-3 ${
+                className={`flex gap-4 animate-fade-in ${
                   message.role === "user" ? "justify-end" : "justify-start"
                 }`}
+                style={{ animationDelay: `${index * 50}ms` }}
               >
                 {message.role === "assistant" && (
                   <div className="flex-shrink-0">
-                    <Bot className={`h-8 w-8 ${currentTheme.iconColor}`} />
+                    <div className="h-9 w-9 rounded-xl bg-gradient-primary flex items-center justify-center shadow-md">
+                      <Bot className="h-5 w-5 text-primary-foreground" />
+                    </div>
                   </div>
                 )}
                 <div
-                  className={`rounded-lg px-4 py-2 max-w-[70%] ${
+                  className={`rounded-2xl px-5 py-3 max-w-[75%] shadow-sm ${
                     message.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted"
+                      ? "bg-gradient-primary text-primary-foreground ml-auto"
+                      : "bg-muted/80 border border-border/30"
                   }`}
                 >
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
                 </div>
               </div>
             ))}
@@ -663,9 +648,9 @@ export function JarvisChat() {
 
         {/* Input Area - Floating */}
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-full max-w-4xl px-6">
-          {/* Mode Selector Bar - Above Input - File Tab Style */}
-          <div className="mb-1 backdrop-blur-lg rounded-t-xl pb-0">
-            <div className="flex items-end gap-0.5">
+          {/* Mode Selector Bar */}
+          <div className="mb-2">
+            <div className="flex items-end gap-1">
               {chatModes.map((mode, index) => {
                 const Icon = mode.icon;
                 const isActive = chatMode === mode.id;
@@ -674,15 +659,15 @@ export function JarvisChat() {
                     key={mode.id}
                     variant="ghost"
                     size="sm"
-                    className={`group whitespace-nowrap transition-all duration-300 ease-out rounded-t-xl rounded-b-none relative border-2 border-b-0 backdrop-blur-sm overflow-hidden ${
+                    className={`group whitespace-nowrap transition-all duration-300 ease-out rounded-xl rounded-b-lg relative overflow-hidden ${
                       isActive 
-                        ? `${mode.activeColor} ${mode.color} px-4 py-2 h-11 z-20 font-medium gap-2` 
-                        : `bg-card/40 border-border/20 px-0 py-1.5 h-8 hover:h-10 hover:py-2 hover:px-4 hover:z-10 ${mode.hoverColor} ${mode.color} w-[24px] hover:w-auto hover:gap-2 hover:backdrop-blur-md`
+                        ? `bg-card/90 border border-primary/40 ${mode.color} px-4 py-2 h-10 z-20 font-medium gap-2 shadow-lg` 
+                        : `bg-card/50 border border-border/20 px-2 py-1.5 h-8 hover:h-9 hover:px-3 hover:z-10 ${mode.hoverColor} ${mode.color} hover:gap-2`
                     }`}
                     onClick={() => handleModeChange(mode.id)}
                   >
-                    <Icon className={`h-4 w-4 flex-shrink-0 transition-all duration-300 ${isActive ? 'opacity-100 scale-100' : 'opacity-70 scale-90 group-hover:opacity-100 group-hover:scale-100'}`} />
-                    <span className={`text-sm font-medium transition-all duration-300 whitespace-nowrap ${isActive ? 'opacity-100 translate-x-0' : 'w-0 opacity-0 -translate-x-2 group-hover:w-auto group-hover:opacity-100 group-hover:translate-x-0'}`}>
+                    <Icon className={`h-4 w-4 flex-shrink-0 transition-all duration-200 ${isActive ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`} />
+                    <span className={`text-sm font-medium transition-all duration-200 whitespace-nowrap ${isActive ? 'opacity-100' : 'w-0 opacity-0 group-hover:w-auto group-hover:opacity-100'}`}>
                       {mode.label}
                     </span>
                   </Button>
@@ -691,7 +676,7 @@ export function JarvisChat() {
             </div>
           </div>
           {/* Input Container */}
-          <div className="bg-background/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-border/50 p-4">
+          <div className="glass-strong rounded-2xl shadow-2xl border-border/30 p-4">
             <div className="flex gap-2">
               <input
                 ref={fileInputRef}

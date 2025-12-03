@@ -463,11 +463,11 @@ export default function Profile() {
       </Dialog>
 
       <SidebarProvider>
-      <div className="min-h-screen flex w-full">
+      <div className="min-h-screen flex w-full bg-background">
         <AppSidebar />
-        <div className="flex-1 flex flex-col">
-          <header className="h-16 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-10">
-            <div className="h-full px-4 flex items-center justify-between">
+        <div className="flex-1 flex flex-col min-w-0">
+          <header className="h-14 border-b border-border/40 bg-background/80 backdrop-blur-sm sticky top-0 z-10">
+            <div className="h-full px-5 flex items-center justify-between">
               <div className="flex-1" />
               <UserMenu />
             </div>
@@ -475,20 +475,20 @@ export default function Profile() {
 
           <main className="flex-1">
             {/* Profile Header */}
-            <div className="bg-gradient-to-r from-primary/20 via-primary/10 to-background py-12 px-6 border-b border-border">
+            <div className="bg-gradient-to-r from-primary/15 via-primary/5 to-transparent py-10 px-6 border-b border-border/40">
               <div className="max-w-7xl mx-auto">
                 <div className="flex items-start gap-6">
-                  <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
+                  <Avatar className="h-20 w-20 border-4 border-background shadow-elevated">
                     <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=user" />
-                    <AvatarFallback>AI</AvatarFallback>
+                    <AvatarFallback className="text-lg font-medium">AI</AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <h1 className="text-3xl font-bold mb-2">稳健第一</h1>
-                    <div className="flex gap-6 text-sm text-muted-foreground mb-4">
-                      <span><span className="font-semibold text-foreground">创作 0</span></span>
-                      <span><span className="font-semibold text-foreground">粉丝 458</span></span>
-                      <span><span className="font-semibold text-foreground">作品创作次数 0</span></span>
-                      <span><span className="font-semibold text-foreground">作品应用次数 0</span></span>
+                    <h1 className="text-2xl font-display font-semibold mb-3">稳健第一</h1>
+                    <div className="flex gap-6 text-sm text-muted-foreground">
+                      <span><span className="font-medium text-foreground">创作 0</span></span>
+                      <span><span className="font-medium text-foreground">粉丝 458</span></span>
+                      <span><span className="font-medium text-foreground">作品创作次数 0</span></span>
+                      <span><span className="font-medium text-foreground">作品应用次数 0</span></span>
                     </div>
                   </div>
                 </div>
@@ -498,12 +498,12 @@ export default function Profile() {
             {/* Content Tabs */}
             <div className="max-w-7xl mx-auto px-6 py-6">
               <Tabs defaultValue="assets" className="w-full">
-                <TabsList className="mb-6 grid w-full max-w-md grid-cols-2">
-                  <TabsTrigger value="assets" className="flex items-center gap-2">
+                <TabsList className="mb-6 grid w-full max-w-md grid-cols-2 h-11 rounded-full p-1 bg-secondary/50">
+                  <TabsTrigger value="assets" className="flex items-center gap-2 rounded-full data-[state=active]:bg-background data-[state=active]:shadow-soft">
                     <FolderOpen className="h-4 w-4" />
                     个人资产库
                   </TabsTrigger>
-                  <TabsTrigger value="archived" className="flex items-center gap-2">
+                  <TabsTrigger value="archived" className="flex items-center gap-2 rounded-full data-[state=active]:bg-background data-[state=active]:shadow-soft">
                     <Archive className="h-4 w-4" />
                     已归档聊天
                   </TabsTrigger>

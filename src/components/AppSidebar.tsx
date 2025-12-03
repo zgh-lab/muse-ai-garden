@@ -55,23 +55,23 @@ export function AppSidebar({ onHoverExpandChange }: AppSidebarProps) {
   };
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-border">
+    <Sidebar collapsible="icon" className="border-r border-border/40">
       <SidebarContent className="pt-0 bg-sidebar">
         <SidebarGroup>
-          <div className="px-3 py-3 flex items-center gap-2 border-b border-border">
+          <div className="px-4 py-4 flex items-center gap-3 border-b border-border/40">
             {!isCollapsed && (
               <span 
-                className="font-semibold text-primary cursor-pointer"
+                className="font-display font-semibold text-primary text-lg cursor-pointer tracking-tight"
                 onClick={() => navigate('/')}
               >
                 BlueWhale
               </span>
             )}
-            <SidebarTrigger className="h-7 w-7 ml-auto" />
+            <SidebarTrigger className="h-8 w-8 ml-auto rounded-full" />
           </div>
           
-          <SidebarGroupContent className="px-2 py-2">
-            <SidebarMenu className="space-y-0.5">
+          <SidebarGroupContent className="px-3 py-3">
+            <SidebarMenu className="space-y-1">
               {navItems.map((item) => {
                 if (item.subItems) {
                   const isActive = isGroupActive(item);
@@ -98,32 +98,32 @@ export function AppSidebar({ onHoverExpandChange }: AppSidebarProps) {
                                 setOpenGroups(prev => [...prev, item.title]);
                               }
                             }}
-                            className={`flex items-center gap-2 px-2 py-2 rounded-lg transition-colors ${
-                              isActive ? 'bg-secondary text-foreground' : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${
+                              isActive ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-secondary/60 hover:text-foreground'
                             }`}
                           >
-                            <item.icon className="h-4 w-4" />
+                            <item.icon className="h-5 w-5" />
                             {!isCollapsed && (
                               <>
-                                <span className="flex-1 text-sm">{item.title}</span>
-                                <ChevronDown className="h-3 w-3 transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                                <span className="flex-1 text-sm font-medium">{item.title}</span>
+                                <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                               </>
                             )}
                           </SidebarMenuButton>
                         </CollapsibleTrigger>
                         <CollapsibleContent>
-                          <SidebarMenuSub className="ml-4 mt-1 space-y-0.5 border-l border-border pl-2">
+                          <SidebarMenuSub className="ml-5 mt-1 space-y-0.5 border-l border-border/40 pl-3">
                             {item.subItems.map((subItem) => (
                               <SidebarMenuSubItem key={subItem.title}>
                                 <SidebarMenuSubButton asChild isActive={currentPath === subItem.url}>
                                   <NavLink
                                     to={subItem.url}
-                                    className={`px-2 py-1.5 rounded text-sm transition-colors ${
+                                    className={`px-3 py-2 rounded-lg text-sm transition-all duration-200 ${
                                       currentPath === subItem.url
-                                        ? 'text-primary'
+                                        ? 'text-primary font-medium'
                                         : 'text-muted-foreground hover:text-foreground'
                                     }`}
-                                    activeClassName="text-primary"
+                                    activeClassName="text-primary font-medium"
                                   >
                                     {!isCollapsed && subItem.title}
                                   </NavLink>
@@ -143,13 +143,13 @@ export function AppSidebar({ onHoverExpandChange }: AppSidebarProps) {
                     <SidebarMenuButton asChild isActive={isActive}>
                       <NavLink
                         to={item.url}
-                        className={`flex items-center gap-2 px-2 py-2 rounded-lg transition-colors ${
-                          isActive ? 'bg-secondary text-foreground' : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${
+                          isActive ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-secondary/60 hover:text-foreground'
                         }`}
-                        activeClassName="bg-secondary text-foreground"
+                        activeClassName="bg-primary/10 text-primary"
                       >
-                        <item.icon className="h-4 w-4" />
-                        {!isCollapsed && <span className="text-sm">{item.title}</span>}
+                        <item.icon className="h-5 w-5" />
+                        {!isCollapsed && <span className="text-sm font-medium">{item.title}</span>}
                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

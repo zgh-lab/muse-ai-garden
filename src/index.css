@@ -1,57 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Clean, Professional Design System */
+/* Google-inspired Clean Design System */
 
 @layer base {
   :root {
-    /* Neutral Dark Theme */
-    --background: 220 16% 8%;
-    --foreground: 0 0% 95%;
+    /* Deep Dark Theme with Cyan Accent */
+    --background: 220 20% 6%;
+    --foreground: 210 20% 98%;
 
-    --card: 220 16% 11%;
-    --card-foreground: 0 0% 95%;
+    --card: 220 18% 9%;
+    --card-foreground: 210 20% 98%;
 
-    --popover: 220 16% 10%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 220 18% 10%;
+    --popover-foreground: 210 20% 98%;
 
-    /* Primary - Clean Blue */
-    --primary: 210 100% 56%;
-    --primary-foreground: 0 0% 100%;
+    /* Primary - Cyan/Teal from reference */
+    --primary: 190 90% 50%;
+    --primary-foreground: 220 20% 6%;
 
     /* Secondary */
-    --secondary: 220 14% 16%;
-    --secondary-foreground: 0 0% 95%;
+    --secondary: 220 16% 13%;
+    --secondary-foreground: 210 20% 90%;
 
-    --muted: 220 14% 14%;
-    --muted-foreground: 220 10% 50%;
+    --muted: 220 16% 11%;
+    --muted-foreground: 220 12% 55%;
 
-    /* Accent - Soft Purple */
-    --accent: 260 60% 55%;
-    --accent-foreground: 0 0% 100%;
+    /* Accent */
+    --accent: 220 16% 15%;
+    --accent-foreground: 210 20% 98%;
 
-    --destructive: 0 65% 55%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 145 65% 42%;
-    --warning: 38 92% 50%;
+    --success: 160 84% 39%;
+    --warning: 43 96% 56%;
 
-    --border: 220 14% 18%;
-    --input: 220 14% 14%;
-    --ring: 210 100% 56%;
+    --border: 220 14% 14%;
+    --input: 220 16% 12%;
+    --ring: 190 90% 50%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     /* Sidebar */
-    --sidebar-background: 220 16% 9%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 210 100% 56%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 14% 14%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 220 14% 16%;
-    --sidebar-ring: 210 100% 56%;
+    --sidebar-background: 220 20% 7%;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: 190 90% 50%;
+    --sidebar-primary-foreground: 220 20% 6%;
+    --sidebar-accent: 220 16% 12%;
+    --sidebar-accent-foreground: 210 20% 98%;
+    --sidebar-border: 220 14% 12%;
+    --sidebar-ring: 190 90% 50%;
     
     --emerald-400: 160 84% 39%;
   }
@@ -68,16 +70,21 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Google Sans', 'Roboto', sans-serif;
+    font-weight: 500;
   }
   
   ::selection {
-    @apply bg-primary/20 text-foreground;
+    @apply bg-primary/25 text-foreground;
   }
   
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
   }
   
   ::-webkit-scrollbar-track {
@@ -85,25 +92,34 @@
   }
   
   ::-webkit-scrollbar-thumb {
-    @apply bg-border rounded-full;
+    @apply bg-muted-foreground/20 rounded-full;
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/30;
+    @apply bg-muted-foreground/35;
   }
   
   *:focus-visible {
-    @apply outline-none ring-2 ring-ring/40 ring-offset-1 ring-offset-background;
+    @apply outline-none ring-2 ring-primary/50 ring-offset-2 ring-offset-background;
   }
 }
 
 @layer utilities {
   .animate-fade-in {
-    animation: fadeIn 0.3s ease-out;
+    animation: fadeIn 0.25s ease-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
   }
   
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(4px); }
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { mockAssets } from "@/data/mockAssets";
-import { Send, Bot, Plus, Image, Video, Music, MoreHorizontal, Search, Clock, MessageCircle, Check, Library, X, Trash2, Pencil, Share2, Archive, Tag as TagIcon, ChevronDown, PanelRightOpen, PanelRightClose, Paperclip } from "lucide-react";
+import { Send, Bot, Image, Video, Music, MessageCircle, Library, Tag as TagIcon, ChevronDown, Paperclip, Plus, X, Check, Pencil, Trash2 } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import jarvisIcon from "@/assets/jarvis-icon.png";
 import { Button } from "@/components/ui/button";
@@ -31,22 +31,17 @@ const chatModes = [
   { id: "audio" as ChatMode, label: "音频", icon: Music },
 ];
 
-interface ChatHistory {
-  id: string;
-  title: string;
-  timestamp: string;
-  isArchived?: boolean;
+interface JarvisChatProps {
+  onNewChat?: () => void;
 }
 
-export function JarvisChat() {
+export function JarvisChat({ onNewChat }: JarvisChatProps) {
   const location = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [chatMode, setChatMode] = useState<ChatMode>("default");
-  const [searchQuery, setSearchQuery] = useState("");
   const [showAssetLibrary, setShowAssetLibrary] = useState(false);
   const [isAssetLibraryMinimized, setIsAssetLibraryMinimized] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -220,73 +215,6 @@ export function JarvisChat() {
       setImageCount("1");
     }
   }, [selectedImageTools]);
-  
-  const [chatHistories, setChatHistories] = useState<ChatHistory[]>(() => {
-    const saved = localStorage.getItem('chatHistories');
-    if (saved) {
-      return JSON.parse(saved);
-    }
-    return [
-      { id: "1", title: "AI图片生成讨论", timestamp: "2小时前", isArchived: false },
-      { id: "2", title: "视频剪辑技巧", timestamp: "昨天", isArchived: false },
-      { id: "3", title: "音频处理咨询", timestamp: "3天前", isArchived: false },
-    ];
-  });
-
-  useEffect(() => {
-    localStorage.setItem('chatHistories', JSON.stringify(chatHistories));
-  }, [chatHistories]);
-  
-  const [editingChatId, setEditingChatId] = useState<string | null>(null);
-  const [editingTitle, setEditingTitle] = useState("");
-
-  const handleNewChat = () => {
-    setMessages([
-      {
-        role: "assistant",
-        content: "你好！我是G社 贾维斯，有什么可以帮助你的吗？",
-      },
-    ]);
-    setChatMode("default");
-  };
-
-  const handleDeleteHistory = (id: string) => {
-    setChatHistories(prev => prev.filter(chat => chat.id !== id));
-  };
-
-  const handleStartRename = (id: string, currentTitle: string) => {
-    setEditingChatId(id);
-    setEditingTitle(currentTitle);
-  };
-
-  const handleRenameChat = (id: string) => {
-    if (editingTitle.trim()) {
-      setChatHistories(prev => 
-        prev.map(chat => 
-          chat.id === id ? { ...chat, title: editingTitle.trim() } : chat
-        )
-      );
-    }
-    setEditingChatId(null);
-    setEditingTitle("");
-  };
-
-  const handleCancelRename = () => {
-    setEditingChatId(null);
-    setEditingTitle("");
-  };
-
-  const handleShareChat = (chatId: string) => {
-    console.log("分享对话:", chatId);
-  };
-
-  const handleArchiveChat = (chatId: string) => {
-    setChatHistories(prev => 
-      prev.map(chat => 
-        chat.id === chatId ? { ...chat, isArchived: true } : chat
-      )
-    );
-  };
 
   const handleModeChange = (mode: ChatMode) => {
     setChatMode(mode);
@@ -370,129 +298,23 @@ export function JarvisChat() {
     setNewTagValue("");
   };
 
+  const handleNewChat = () => {
+    setMessages([
+      {
+        role: "assistant",
+        content: "你好！我是G社 贾维斯，有什么可以帮助你的吗？",
+      },
+    ]);
+    setChatMode("default");
+    onNewChat?.();
+  };
+
   return (
     <div className="flex h-full w-full bg-background">
-      {/* History Sidebar */}
-      {sidebarOpen && (
-        <div className="w-72 border-r border-border/50 bg-sidebar flex flex-col">
-          <div className="p-4">
-            <Button 
-              onClick={handleNewChat}
-              className="w-full justify-center gap-2 h-10"
-              variant="default"
-            >
-              <Plus className="h-4 w-4" />
-              新建对话
-            </Button>
-          </div>
-          
-          <div className="px-4 pb-3">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="搜索历史记录..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-10 text-sm bg-secondary/40 border-0"
-              />
-            </div>
-          </div>
-          
-          <div className="h-px bg-border/40 mx-4" />
-          
-          <ScrollArea className="flex-1 px-3 py-3">
-            <div className="space-y-1">
-              {chatHistories
-                .filter(chat => 
-                  !chat.isArchived && (
-                    searchQuery === "" || 
-                    chat.title.toLowerCase().includes(searchQuery.toLowerCase())
-                  )
-                )
-                .map((chat) => (
-                  <div key={chat.id} className="group relative">
-                    {editingChatId === chat.id ? (
-                      <div className="flex items-center gap-1.5 p-1.5 bg-secondary/50 rounded-xl">
-                        <Input
-                          value={editingTitle}
-                          onChange={(e) => setEditingTitle(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') handleRenameChat(chat.id);
-                            else if (e.key === 'Escape') handleCancelRename();
-                          }}
-                          className="h-8 text-sm border-0 bg-transparent"
-                          autoFocus
-                        />
-                        <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={() => handleRenameChat(chat.id)}>
-                          <Check className="h-3.5 w-3.5 text-success" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={handleCancelRename}>
-                          <X className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="flex items-center">
-                        <button className="flex-1 text-left px-3 py-2.5 rounded-xl text-sm hover:bg-secondary/60 transition-all duration-200">
-                          <div className="truncate text-foreground font-medium">{chat.title}</div>
-                          <div className="text-xs text-muted-foreground mt-0.5">{chat.timestamp}</div>
-                        </button>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-all duration-200">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-36 rounded-xl">
-                            <DropdownMenuItem onClick={() => handleStartRename(chat.id, chat.title)} className="rounded-lg">
-                              <Pencil className="h-4 w-4 mr-2" />重命名
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleArchiveChat(chat.id)} className="rounded-lg">
-                              <Archive className="h-4 w-4 mr-2" />归档
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleDeleteHistory(chat.id)} className="text-destructive rounded-lg">
-                              <Trash2 className="h-4 w-4 mr-2" />删除
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    )}
-                  </div>
-                ))}
-            </div>
-          </ScrollArea>
-        </div>
-      )}
-
       {/* Main Chat Area */}
       <ResizablePanelGroup direction="horizontal" className="flex-1">
         <ResizablePanel defaultSize={showAssetLibrary ? 70 : 100} minSize={50}>
           <div className="flex flex-col h-full">
-            {/* Header */}
-            <div className="h-14 border-b border-border/40 flex items-center px-5 gap-4 bg-background/80 backdrop-blur-sm">
-              <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => setSidebarOpen(!sidebarOpen)}>
-                {sidebarOpen ? <PanelRightClose className="h-5 w-5" /> : <PanelRightOpen className="h-5 w-5" />}
-              </Button>
-              
-              <div className="flex items-center gap-3">
-                <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                  <img src={jarvisIcon} alt="Jarvis" className="h-6 w-6" />
-                </div>
-                <span className="font-display font-medium text-base">G社 贾维斯</span>
-              </div>
-              
-              <div className="flex-1" />
-              
-              <Button
-                variant={showAssetLibrary ? "secondary" : "ghost"}
-                size="sm"
-                onClick={() => setShowAssetLibrary(!showAssetLibrary)}
-                className="gap-2 h-9"
-              >
-                <Library className="h-4 w-4" />
-                资产库
-              </Button>
-            </div>
-
             {/* Messages */}
             <ScrollArea className="flex-1 px-6 py-6">
               <div className="max-w-3xl mx-auto space-y-5">

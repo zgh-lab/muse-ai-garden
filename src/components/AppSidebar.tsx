@@ -1,4 +1,4 @@
-import { Bot, Sparkles, User, Plus, Search, MoreHorizontal, Pencil, Archive, Trash2, Check, X, MessageSquare, PanelLeftClose, PanelLeft } from "lucide-react";
+import { Bot, Sparkles, User, Plus, Search, MoreHorizontal, Pencil, Archive, Trash2, Check, X, MessageSquare, PanelLeftClose, PanelLeft, FolderCog } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -33,6 +33,15 @@ const navItems = [
     subItems: [
       { title: "Webhub工作流", url: "/create/webhub-workflow" },
       { title: "Webhub Lora训练", url: "/create/webhub-lora" },
+    ]
+  },
+  { 
+    title: "项目定制工具库", 
+    icon: FolderCog,
+    subItems: [
+      { title: "自定义工作流", url: "/custom/workflow" },
+      { title: "模型管理", url: "/custom/models" },
+      { title: "插件市场", url: "/custom/plugins" },
     ]
   },
   { title: "个人中心", url: "/profile", icon: User },

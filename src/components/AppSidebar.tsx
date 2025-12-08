@@ -39,9 +39,9 @@ const navItems = [
     title: "项目定制工具库", 
     icon: FolderCog,
     subItems: [
-      { title: "自定义工作流", url: "/custom/workflow" },
-      { title: "模型管理", url: "/custom/models" },
-      { title: "插件市场", url: "/custom/plugins" },
+      { title: "M72", url: "http://39.108.190.164:4072/", isExternal: true },
+      { title: "M71", url: "http://39.108.190.164:4071/", isExternal: true },
+      { title: "M98", url: "http://39.108.190.164:4098/", isExternal: true },
     ]
   },
   { title: "个人中心", url: "/profile", icon: User },
@@ -223,17 +223,29 @@ export function AppSidebar({ onHoverExpandChange, onNewChat, onSelectChat }: App
                     <div className={`absolute ${isNavExpanded ? 'left-full top-0 ml-2' : 'left-full top-0 ml-2'} z-50 animate-fade-in`}>
                       <div className="bg-popover border border-border rounded-xl p-2 shadow-lg min-w-[160px]">
                         {item.subItems?.map((subItem) => (
-                          <NavLink
-                            key={subItem.url}
-                            to={subItem.url}
-                            className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
-                              currentPath === subItem.url
-                                ? 'bg-primary/15 text-primary font-medium'
-                                : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
-                            }`}
-                          >
-                            {subItem.title}
-                          </NavLink>
+                          'isExternal' in subItem && subItem.isExternal ? (
+                            <a
+                              key={subItem.url}
+                              href={subItem.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block px-3 py-2 rounded-lg text-sm transition-colors text-muted-foreground hover:bg-secondary hover:text-foreground"
+                            >
+                              {subItem.title}
+                            </a>
+                          ) : (
+                            <NavLink
+                              key={subItem.url}
+                              to={subItem.url}
+                              className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
+                                currentPath === subItem.url
+                                  ? 'bg-primary/15 text-primary font-medium'
+                                  : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                              }`}
+                            >
+                              {subItem.title}
+                            </NavLink>
+                          )
                         ))}
                       </div>
                     </div>

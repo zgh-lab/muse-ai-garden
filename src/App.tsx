@@ -15,6 +15,7 @@ import AudioGeneration from "./pages/create/AudioGeneration";
 import WebhubWorkflow from "./pages/create/WebhubWorkflow";
 import WebhubLora from "./pages/create/WebhubLora";
 import AIComprehensive from "./pages/create/AIComprehensive";
+import M72 from "./pages/custom/M72";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ function AppContent() {
       <Route path="/create/webhub-workflow" element={<WebhubWorkflow />} />
       <Route path="/create/webhub-lora" element={<WebhubLora />} />
       <Route path="/create/ai-comprehensive" element={<AIComprehensive />} />
+      <Route path="/custom/m72" element={<M72 />} />
       <Route path="/other" element={<Other />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/settings" element={<Settings />} />

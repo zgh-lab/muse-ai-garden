@@ -39,9 +39,9 @@ const navItems = [
     title: "项目定制工具库", 
     icon: FolderCog,
     subItems: [
-      { title: "M72", url: "http://39.108.190.164:4072/", isExternal: true },
-      { title: "M71", url: "http://39.108.190.164:4071/", isExternal: true },
-      { title: "M98", url: "http://39.108.190.164:4098/", isExternal: true },
+      { title: "M72", url: "/custom/m72" },
+      { title: "M71", url: "/custom/m71" },
+      { title: "M98", url: "/custom/m98" },
     ]
   },
   { title: "个人中心", url: "/profile", icon: User },

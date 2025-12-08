@@ -123,9 +123,9 @@ export function AppSidebar({ onHoverExpandChange, onNewChat, onSelectChat }: App
   return (
     <TooltipProvider delayDuration={0}>
       <div className="flex h-screen">
-        {/* Main Navigation Container */}
-        <div className={`${isNavExpanded ? (isJarvisPage && isPanelOpen ? 'w-72' : 'w-44') : 'w-14'} bg-sidebar flex flex-col border-r border-sidebar-border shrink-0 transition-all duration-300 relative z-10`}>
-          {/* Logo Header */}
+        {/* Left Column - Icon Navigation (Expandable) */}
+        <div className={`${isNavExpanded ? 'w-44' : 'w-14'} bg-sidebar flex flex-col border-r border-sidebar-border shrink-0 transition-all duration-300 relative z-10`}>
+          {/* Logo */}
           <div className="h-14 flex items-center justify-between px-3 border-b border-sidebar-border">
             <button 
               onClick={() => {
@@ -161,245 +161,242 @@ export function AppSidebar({ onHoverExpandChange, onNewChat, onSelectChat }: App
             )}
           </div>
 
-          {/* Content Area - Navigation + Chat History (when expanded) */}
-          <div className="flex-1 flex flex-col overflow-hidden">
-            {/* Chat History Panel (nested under BlueWhale when on Jarvis page) */}
-            {isNavExpanded && isJarvisPage && isPanelOpen && (
-              <div className="border-b border-sidebar-border animate-fade-in">
-                {/* Panel Header */}
-                <div className="h-10 flex items-center justify-between px-3 bg-sidebar-accent/30">
-                  <span className="text-xs font-medium text-foreground">对话历史</span>
+          {/* Navigation Icons */}
+          <nav className="flex-1 flex flex-col py-3 gap-1 px-2">
+            {navItems.map((item) => {
+              const isActive = item.url ? currentPath === item.url : isGroupActive(item);
+              const hasSubItems = !!item.subItems;
+              
+              return (
+                <div 
+                  key={item.title}
+                  className="relative"
+                  onMouseEnter={() => hasSubItems && setHoveredItem(item.title)}
+                  onMouseLeave={() => setHoveredItem(null)}
+                >
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <button
-                        onClick={() => setIsPanelOpen(false)}
-                        className="w-6 h-6 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-all duration-200"
-                      >
-                        <X className="h-3.5 w-3.5" />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent side="right" sideOffset={8}>
-                      关闭面板
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-
-                {/* New Chat Button */}
-                <div className="p-2">
-                  <Button 
-                    onClick={onNewChat}
-                    className="w-full justify-center gap-2 h-8 text-xs rounded-xl group"
-                    variant="default"
-                  >
-                    <Plus className="h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-90" />
-                    新建对话
-                  </Button>
-                </div>
-                
-                {/* Search */}
-                <div className="px-2 pb-2">
-                  <div className="relative">
-                    <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
-                    <Input
-                      placeholder="搜索历史..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-7 h-7 text-xs bg-secondary/40 border-0 rounded-lg"
-                    />
-                  </div>
-                </div>
-                
-                {/* Chat List */}
-                <ScrollArea className="max-h-48 px-2">
-                  <div className="space-y-0.5 pb-2">
-                    {filteredChats.map((chat) => (
-                      <div key={chat.id} className="group relative">
-                        {editingChatId === chat.id ? (
-                          <div className="flex items-center gap-1 p-1 bg-secondary/50 rounded-lg">
-                            <Input
-                              value={editingTitle}
-                              onChange={(e) => setEditingTitle(e.target.value)}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') handleRenameChat(chat.id);
-                                else if (e.key === 'Escape') handleCancelRename();
-                              }}
-                              className="h-6 text-xs border-0 bg-transparent"
-                              autoFocus
-                            />
-                            <Button variant="ghost" size="icon" className="h-5 w-5 shrink-0" onClick={() => handleRenameChat(chat.id)}>
-                              <Check className="h-3 w-3 text-success" />
-                            </Button>
-                            <Button variant="ghost" size="icon" className="h-5 w-5 shrink-0" onClick={handleCancelRename}>
-                              <X className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        ) : (
-                          <div className="flex items-center group/chat">
-                            <button 
-                              onClick={() => onSelectChat?.(chat.id)}
-                              className="flex-1 text-left px-2 py-1.5 rounded-lg text-xs hover:bg-secondary/60 transition-all duration-300 hover:translate-x-0.5"
-                            >
-                              <div className="flex items-center gap-1.5">
-                                <MessageSquare className="h-3 w-3 text-muted-foreground shrink-0" />
-                                <span className="truncate text-foreground/90 text-[11px]">{chat.title}</span>
-                              </div>
-                              <div className="text-[9px] text-muted-foreground mt-0.5 ml-4">{chat.timestamp}</div>
-                            </button>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-all duration-200">
-                                  <MoreHorizontal className="h-3 w-3" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="w-28 rounded-lg">
-                                <DropdownMenuItem onClick={() => handleStartRename(chat.id, chat.title)} className="text-xs">
-                                  <Pencil className="h-3 w-3 mr-2" />重命名
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => handleArchiveChat(chat.id)} className="text-xs">
-                                  <Archive className="h-3 w-3 mr-2" />归档
-                                </DropdownMenuItem>
-                                <DropdownMenuItem 
-                                  onClick={() => handleDeleteHistory(chat.id)} 
-                                  className="text-xs text-destructive focus:text-destructive"
-                                >
-                                  <Trash2 className="h-3 w-3 mr-2" />删除
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                    
-                    {filteredChats.length === 0 && (
-                      <div className="text-center py-4 text-[10px] text-muted-foreground">
-                        暂无对话记录
-                      </div>
-                    )}
-                  </div>
-                </ScrollArea>
-              </div>
-            )}
-
-            {/* Navigation Icons */}
-            <nav className="flex-1 flex flex-col py-3 gap-1 px-2">
-              {navItems.map((item) => {
-                const isActive = item.url ? currentPath === item.url : isGroupActive(item);
-                const hasSubItems = !!item.subItems;
-                
-                return (
-                  <div 
-                    key={item.title}
-                    className="relative"
-                    onMouseEnter={() => hasSubItems && setHoveredItem(item.title)}
-                    onMouseLeave={() => setHoveredItem(null)}
-                  >
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        {item.url ? (
-                          <NavLink
-                            to={item.url}
-                            className={`${isNavExpanded ? 'w-full justify-start px-3 gap-3' : 'w-10 justify-center mx-auto'} h-10 rounded-xl flex items-center transition-all duration-300 group/nav ${
-                              isActive 
-                                ? 'bg-primary/15 text-primary shadow-inner-glow' 
-                                : 'text-muted-foreground hover:bg-sidebar-accent hover:text-foreground hover:scale-105'
-                            }`}
-                            activeClassName="bg-primary/15 text-primary shadow-inner-glow"
-                          >
-                            <item.icon className={`h-5 w-5 shrink-0 transition-all duration-300 ${isActive ? 'animate-icon-breathe' : 'group-hover/nav:scale-110'}`} />
-                            {isNavExpanded && <span className="text-sm truncate">{item.title}</span>}
-                          </NavLink>
-                        ) : (
-                          <button
-                            className={`${isNavExpanded ? 'w-full justify-start px-3 gap-3' : 'w-10 justify-center mx-auto'} h-10 rounded-xl flex items-center transition-all duration-200 ${
-                              isActive 
-                                ? 'bg-primary/15 text-primary' 
-                                : 'text-muted-foreground hover:bg-sidebar-accent hover:text-foreground'
-                            }`}
-                          >
-                            <item.icon className="h-5 w-5 shrink-0" />
-                            {isNavExpanded && <span className="text-sm truncate">{item.title}</span>}
-                          </button>
-                        )}
-                      </TooltipTrigger>
-                      {!isNavExpanded && (
-                        <TooltipContent side="right" sideOffset={8}>
-                          {item.title}
-                        </TooltipContent>
+                      {item.url ? (
+                        <NavLink
+                          to={item.url}
+                          className={`${isNavExpanded ? 'w-full justify-start px-3 gap-3' : 'w-10 justify-center mx-auto'} h-10 rounded-xl flex items-center transition-all duration-300 group/nav ${
+                            isActive 
+                              ? 'bg-primary/15 text-primary shadow-inner-glow' 
+                              : 'text-muted-foreground hover:bg-sidebar-accent hover:text-foreground hover:scale-105'
+                          }`}
+                          activeClassName="bg-primary/15 text-primary shadow-inner-glow"
+                        >
+                          <item.icon className={`h-5 w-5 shrink-0 transition-all duration-300 ${isActive ? 'animate-icon-breathe' : 'group-hover/nav:scale-110'}`} />
+                          {isNavExpanded && <span className="text-sm truncate">{item.title}</span>}
+                        </NavLink>
+                      ) : (
+                        <button
+                          className={`${isNavExpanded ? 'w-full justify-start px-3 gap-3' : 'w-10 justify-center mx-auto'} h-10 rounded-xl flex items-center transition-all duration-200 ${
+                            isActive 
+                              ? 'bg-primary/15 text-primary' 
+                              : 'text-muted-foreground hover:bg-sidebar-accent hover:text-foreground'
+                          }`}
+                        >
+                          <item.icon className="h-5 w-5 shrink-0" />
+                          {isNavExpanded && <span className="text-sm truncate">{item.title}</span>}
+                        </button>
                       )}
-                    </Tooltip>
-
-                    {/* Sub-items dropdown on hover */}
-                    {hasSubItems && hoveredItem === item.title && (
-                      <div className={`absolute ${isNavExpanded ? 'left-full top-0 ml-2' : 'left-full top-0 ml-2'} z-50 animate-fade-in`}>
-                        <div className="bg-popover border border-border rounded-xl p-2 shadow-lg min-w-[160px]">
-                          {item.subItems?.map((subItem) => (
-                            <NavLink
-                              key={subItem.url}
-                              to={subItem.url}
-                              className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
-                                currentPath === subItem.url
-                                  ? 'bg-primary/15 text-primary font-medium'
-                                  : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
-                              }`}
-                            >
-                              {subItem.title}
-                            </NavLink>
-                          ))}
-                        </div>
-                      </div>
+                    </TooltipTrigger>
+                    {!isNavExpanded && (
+                      <TooltipContent side="right" sideOffset={8}>
+                        {item.title}
+                      </TooltipContent>
                     )}
-                  </div>
-                );
-              })}
-            </nav>
+                  </Tooltip>
 
-            {/* Bottom Buttons */}
-            <div className="pb-3 px-2 space-y-1 relative z-50 pointer-events-auto">
-              {/* Panel Toggle (only on Jarvis page when panel is closed) */}
-              {isJarvisPage && !isPanelOpen && isNavExpanded && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        console.log('Panel toggle clicked');
-                        setIsPanelOpen(true);
-                      }}
-                      className={`${isNavExpanded ? 'w-full justify-start px-3 gap-3' : 'w-10 justify-center mx-auto'} h-10 rounded-xl flex items-center text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-all duration-200 cursor-pointer pointer-events-auto`}
-                    >
-                      <MessageSquare className="h-5 w-5 shrink-0 pointer-events-none" />
-                      {isNavExpanded && <span className="text-sm pointer-events-none">对话历史</span>}
-                    </button>
-                  </TooltipTrigger>
-                  {!isNavExpanded && (
-                    <TooltipContent side="right" sideOffset={8}>
-                      打开对话历史
-                    </TooltipContent>
+                  {/* Sub-items dropdown on hover */}
+                  {hasSubItems && hoveredItem === item.title && (
+                    <div className={`absolute ${isNavExpanded ? 'left-full top-0 ml-2' : 'left-full top-0 ml-2'} z-50 animate-fade-in`}>
+                      <div className="bg-popover border border-border rounded-xl p-2 shadow-lg min-w-[160px]">
+                        {item.subItems?.map((subItem) => (
+                          <NavLink
+                            key={subItem.url}
+                            to={subItem.url}
+                            className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
+                              currentPath === subItem.url
+                                ? 'bg-primary/15 text-primary font-medium'
+                                : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                            }`}
+                          >
+                            {subItem.title}
+                          </NavLink>
+                        ))}
+                      </div>
+                    </div>
                   )}
-                </Tooltip>
-              )}
-              
-              {/* Nav Expand Toggle - only show when collapsed */}
-              {!isNavExpanded && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={() => setIsNavExpanded(true)}
-                      className="w-10 h-10 rounded-xl flex items-center justify-center mx-auto text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-all duration-200 cursor-pointer pointer-events-auto"
-                    >
-                      <PanelLeft className="h-5 w-5 pointer-events-none" />
-                    </button>
-                  </TooltipTrigger>
+                </div>
+              );
+            })}
+          </nav>
+
+          {/* Bottom Buttons */}
+          <div className="pb-3 px-2 space-y-1 relative z-50 pointer-events-auto">
+            {/* Panel Toggle (only on Jarvis page when panel is closed) */}
+            {isJarvisPage && !isPanelOpen && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      console.log('Panel toggle clicked');
+                      setIsPanelOpen(true);
+                    }}
+                    className={`${isNavExpanded ? 'w-full justify-start px-3 gap-3' : 'w-10 justify-center mx-auto'} h-10 rounded-xl flex items-center text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-all duration-200 cursor-pointer pointer-events-auto`}
+                  >
+                    <MessageSquare className="h-5 w-5 shrink-0 pointer-events-none" />
+                    {isNavExpanded && <span className="text-sm pointer-events-none">对话历史</span>}
+                  </button>
+                </TooltipTrigger>
+                {!isNavExpanded && (
                   <TooltipContent side="right" sideOffset={8}>
-                    展开导航
+                    打开对话历史
                   </TooltipContent>
-                </Tooltip>
-              )}
-            </div>
+                )}
+              </Tooltip>
+            )}
+            
+            {/* Nav Expand Toggle - only show when collapsed */}
+            {!isNavExpanded && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    onClick={() => setIsNavExpanded(true)}
+                    className="w-10 h-10 rounded-xl flex items-center justify-center mx-auto text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-all duration-200 cursor-pointer pointer-events-auto"
+                  >
+                    <PanelLeft className="h-5 w-5 pointer-events-none" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="right" sideOffset={8}>
+                  展开导航
+                </TooltipContent>
+              </Tooltip>
+            )}
           </div>
         </div>
+
+        {/* Right Column - Context Panel (Chat History) */}
+        {isJarvisPage && isPanelOpen && (
+          <div className="w-56 bg-sidebar/50 flex flex-col border-r border-sidebar-border animate-fade-in">
+            {/* Panel Header */}
+            <div className="h-14 flex items-center justify-between px-4 border-b border-sidebar-border">
+              <span className="text-sm font-medium text-foreground">对话历史</span>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setIsPanelOpen(false)}
+                    className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-all duration-200"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="right" sideOffset={8}>
+                  关闭面板
+                </TooltipContent>
+              </Tooltip>
+            </div>
+
+            {/* New Chat Button */}
+            <div className="p-3">
+              <Button 
+                onClick={onNewChat}
+                className="w-full justify-center gap-2 h-9 text-sm rounded-xl group"
+                variant="default"
+              >
+                <Plus className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
+                新建对话
+              </Button>
+            </div>
+            
+            {/* Search */}
+            <div className="px-3 pb-2">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                <Input
+                  placeholder="搜索历史..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-8 h-8 text-xs bg-secondary/40 border-0 rounded-lg"
+                />
+              </div>
+            </div>
+            
+            {/* Chat List */}
+            <ScrollArea className="flex-1 px-2">
+              <div className="space-y-0.5 pb-2">
+                {filteredChats.map((chat) => (
+                  <div key={chat.id} className="group relative">
+                    {editingChatId === chat.id ? (
+                      <div className="flex items-center gap-1 p-1 bg-secondary/50 rounded-lg">
+                        <Input
+                          value={editingTitle}
+                          onChange={(e) => setEditingTitle(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleRenameChat(chat.id);
+                            else if (e.key === 'Escape') handleCancelRename();
+                          }}
+                          className="h-7 text-xs border-0 bg-transparent"
+                          autoFocus
+                        />
+                        <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => handleRenameChat(chat.id)}>
+                          <Check className="h-3 w-3 text-success" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={handleCancelRename}>
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center group/chat">
+                        <button 
+                          onClick={() => onSelectChat?.(chat.id)}
+                          className="flex-1 text-left px-2.5 py-2 rounded-lg text-xs hover:bg-secondary/60 transition-all duration-300 hover:translate-x-1 card-alive"
+                        >
+                          <div className="flex items-center gap-2">
+                            <MessageSquare className="h-3.5 w-3.5 text-muted-foreground shrink-0 transition-transform duration-300 group-hover/chat:scale-110" />
+                            <span className="truncate text-foreground/90">{chat.title}</span>
+                          </div>
+                          <div className="text-[10px] text-muted-foreground mt-0.5 ml-5">{chat.timestamp}</div>
+                        </button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-all duration-200">
+                              <MoreHorizontal className="h-3.5 w-3.5" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-32 rounded-lg">
+                            <DropdownMenuItem onClick={() => handleStartRename(chat.id, chat.title)} className="text-xs">
+                              <Pencil className="h-3.5 w-3.5 mr-2" />重命名
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleArchiveChat(chat.id)} className="text-xs">
+                              <Archive className="h-3.5 w-3.5 mr-2" />归档
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                              onClick={() => handleDeleteHistory(chat.id)} 
+                              className="text-xs text-destructive focus:text-destructive"
+                            >
+                              <Trash2 className="h-3.5 w-3.5 mr-2" />删除
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    )}
+                  </div>
+                ))}
+                
+                {filteredChats.length === 0 && (
+                  <div className="text-center py-6 text-xs text-muted-foreground">
+                    暂无对话记录
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+          </div>
+        )}
       </div>
     </TooltipProvider>
   );

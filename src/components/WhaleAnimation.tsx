@@ -33,65 +33,125 @@ export function WhaleAnimation() {
       initParticles();
     };
 
-    // Whale shape points (座头鲸轮廓)
-    const getWhalePoints = (centerX: number, centerY: number, scale: number) => {
-      const points: { x: number; y: number }[] = [];
+    // 座头鲸轮廓 - 更精确的形状
+    const getWhaleOutline = (centerX: number, centerY: number, scale: number) => {
+      const points: { x: number; y: number; isOutline: boolean }[] = [];
       
-      // 身体主体轮廓
-      const bodyPoints = [
-        // 头部
-        { x: 0, y: 0 },
-        { x: 0.05, y: -0.08 },
-        { x: 0.12, y: -0.12 },
-        { x: 0.2, y: -0.1 },
-        // 背部
-        { x: 0.3, y: -0.08 },
-        { x: 0.4, y: -0.06 },
-        { x: 0.5, y: -0.04 },
-        { x: 0.6, y: -0.02 },
-        // 尾部过渡
-        { x: 0.7, y: 0 },
-        { x: 0.8, y: 0.02 },
-        { x: 0.85, y: 0.04 },
-        // 尾鳍
-        { x: 0.95, y: -0.06 },
-        { x: 1.0, y: -0.1 },
-        { x: 0.98, y: -0.02 },
-        { x: 0.95, y: 0.04 },
-        { x: 1.0, y: 0.1 },
-        { x: 0.95, y: 0.06 },
-        { x: 0.85, y: 0.04 },
-        // 腹部
-        { x: 0.7, y: 0.06 },
-        { x: 0.6, y: 0.08 },
-        { x: 0.5, y: 0.1 },
-        { x: 0.4, y: 0.12 },
-        { x: 0.3, y: 0.14 },
-        { x: 0.2, y: 0.14 },
-        // 胸鳍
-        { x: 0.25, y: 0.2 },
-        { x: 0.3, y: 0.25 },
-        { x: 0.28, y: 0.18 },
-        { x: 0.2, y: 0.14 },
-        // 回到头部
-        { x: 0.1, y: 0.1 },
-        { x: 0.05, y: 0.06 },
-        { x: 0, y: 0 },
+      // 使用贝塞尔曲线插值创建平滑的鲸鱼轮廓
+      const outlinePoints = [
+        // 头部（圆润的大头）
+        { x: 0, y: 0.02 },
+        { x: 0.02, y: -0.02 },
+        { x: 0.05, y: -0.05 },
+        { x: 0.08, y: -0.06 },
+        { x: 0.12, y: -0.065 },
+        { x: 0.16, y: -0.06 },
+        // 背部隆起（座头鲸特征）
+        { x: 0.2, y: -0.055 },
+        { x: 0.22, y: -0.05 },
+        { x: 0.25, y: -0.04 },
+        // 背鳍位置
+        { x: 0.55, y: -0.035 },
+        { x: 0.58, y: -0.055 }, // 背鳍顶部
+        { x: 0.6, y: -0.04 },
+        { x: 0.62, y: -0.035 },
+        // 向尾部过渡
+        { x: 0.7, y: -0.025 },
+        { x: 0.78, y: -0.015 },
+        { x: 0.84, y: -0.005 },
+        // 尾柄（变细）
+        { x: 0.88, y: 0 },
+        { x: 0.91, y: 0.005 },
+        // 尾鳍（座头鲸标志性的大尾巴）
+        { x: 0.94, y: -0.01 },
+        { x: 0.97, y: -0.04 },
+        { x: 1.0, y: -0.07 },
+        { x: 0.98, y: -0.08 },
+        { x: 0.95, y: -0.065 },
+        { x: 0.93, y: -0.02 },
+        { x: 0.91, y: 0.005 },
+        { x: 0.93, y: 0.03 },
+        { x: 0.95, y: 0.075 },
+        { x: 0.98, y: 0.09 },
+        { x: 1.0, y: 0.08 },
+        { x: 0.97, y: 0.05 },
+        { x: 0.94, y: 0.02 },
+        // 腹部返回
+        { x: 0.88, y: 0.015 },
+        { x: 0.8, y: 0.025 },
+        { x: 0.7, y: 0.04 },
+        { x: 0.6, y: 0.055 },
+        { x: 0.5, y: 0.07 },
+        { x: 0.4, y: 0.085 },
+        // 胸鳍位置（座头鲸特征：超长胸鳍）
+        { x: 0.28, y: 0.09 },
+        { x: 0.25, y: 0.1 },
+        { x: 0.22, y: 0.14 },
+        { x: 0.18, y: 0.2 },
+        { x: 0.15, y: 0.24 },
+        { x: 0.13, y: 0.22 },
+        { x: 0.15, y: 0.16 },
+        { x: 0.18, y: 0.1 },
+        { x: 0.2, y: 0.085 },
+        // 腹部褶皱区域
+        { x: 0.15, y: 0.075 },
+        { x: 0.1, y: 0.06 },
+        { x: 0.05, y: 0.04 },
+        { x: 0.02, y: 0.025 },
+        { x: 0, y: 0.02 },
       ];
 
-      bodyPoints.forEach((p) => {
-        points.push({
-          x: centerX + (p.x - 0.5) * scale,
-          y: centerY + p.y * scale,
-        });
+      // 沿轮廓创建更密集的点
+      for (let i = 0; i < outlinePoints.length; i++) {
+        const p1 = outlinePoints[i];
+        const p2 = outlinePoints[(i + 1) % outlinePoints.length];
+        
+        // 在两点之间插入更多点
+        const steps = 3;
+        for (let s = 0; s < steps; s++) {
+          const t = s / steps;
+          points.push({
+            x: centerX + (p1.x + (p2.x - p1.x) * t - 0.5) * scale,
+            y: centerY + (p1.y + (p2.y - p1.y) * t) * scale,
+            isOutline: true,
+          });
+        }
+      }
+
+      // 添加眼睛
+      points.push({
+        x: centerX + (0.08 - 0.5) * scale,
+        y: centerY + (-0.02) * scale,
+        isOutline: true,
       });
 
-      // 添加内部细节点（腹部纹理）
-      for (let i = 0; i < 12; i++) {
-        const t = i / 12;
+      // 添加腹部纹理线（座头鲸特征）
+      for (let line = 0; line < 6; line++) {
+        const startX = 0.05 + line * 0.03;
+        const endX = 0.18 + line * 0.04;
+        for (let i = 0; i < 5; i++) {
+          const t = i / 4;
+          const x = startX + (endX - startX) * t;
+          const y = 0.03 + t * 0.04 + line * 0.008;
+          points.push({
+            x: centerX + (x - 0.5) * scale,
+            y: centerY + y * scale,
+            isOutline: false,
+          });
+        }
+      }
+
+      // 添加身体内部的点来填充
+      for (let i = 0; i < 60; i++) {
+        const t = Math.random() * 0.85 + 0.05;
+        const bodyWidth = 0.06 * Math.sin(t * Math.PI * 0.9);
+        const yOffset = (Math.random() - 0.5) * bodyWidth * 1.5;
+        const baseY = -0.02 + t * 0.04;
+        
         points.push({
-          x: centerX + (0.15 + t * 0.35 - 0.5) * scale,
-          y: centerY + (0.06 + Math.sin(t * Math.PI) * 0.04) * scale,
+          x: centerX + (t - 0.5) * scale,
+          y: centerY + (baseY + yOffset) * scale,
+          isOutline: false,
         });
       }
 
@@ -103,52 +163,31 @@ export function WhaleAnimation() {
       const height = canvas.offsetHeight;
       const centerX = width * 0.5;
       const centerY = height * 0.5;
-      const scale = Math.min(width * 0.7, height * 1.2);
+      const scale = Math.min(width * 0.8, height * 1.4);
 
-      const whalePoints = getWhalePoints(centerX, centerY, scale);
+      const whalePoints = getWhaleOutline(centerX, centerY, scale);
       const particles: Particle[] = [];
 
-      // 从鲸鱼轮廓点创建粒子 - 增加粒子大小
       whalePoints.forEach((point, i) => {
-        const hueOffset = (i / whalePoints.length) * 60; // 0-60 hue range
+        const hueOffset = (point.x - centerX + scale * 0.5) / scale * 40;
         particles.push({
           x: point.x,
           y: point.y,
           baseX: point.x,
           baseY: point.y,
-          vx: (Math.random() - 0.5) * 0.5,
-          vy: (Math.random() - 0.5) * 0.5,
-          size: Math.random() * 3 + 2, // 增大粒子
-          alpha: Math.random() * 0.6 + 0.4, // 提高透明度
-          hue: 180 + hueOffset, // 青色到蓝绿色渐变
-        });
-      });
-
-      // 添加更多随机粒子填充鲸鱼形状
-      for (let i = 0; i < 120; i++) {
-        const t = Math.random();
-        const bodyX = centerX + (t * 0.8 - 0.4) * scale;
-        const bodyY = centerY + (Math.sin(t * Math.PI) * 0.08 - 0.02) * scale + (Math.random() - 0.5) * scale * 0.15;
-        const hueOffset = t * 60;
-        
-        particles.push({
-          x: bodyX,
-          y: bodyY,
-          baseX: bodyX,
-          baseY: bodyY,
           vx: (Math.random() - 0.5) * 0.3,
           vy: (Math.random() - 0.5) * 0.3,
-          size: Math.random() * 2 + 1,
-          alpha: Math.random() * 0.4 + 0.2,
-          hue: 175 + hueOffset + Math.random() * 20,
+          size: point.isOutline ? Math.random() * 2.5 + 2 : Math.random() * 1.5 + 0.8,
+          alpha: point.isOutline ? Math.random() * 0.5 + 0.5 : Math.random() * 0.3 + 0.2,
+          hue: 185 + hueOffset,
         });
-      }
+      });
 
       particlesRef.current = particles;
     };
 
     const drawConnections = (ctx: CanvasRenderingContext2D, particles: Particle[]) => {
-      const maxDistance = 60;
+      const maxDistance = 45;
 
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {

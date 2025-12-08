@@ -128,9 +128,15 @@ export function AppSidebar({ onHoverExpandChange, onNewChat, onSelectChat }: App
           {/* Logo */}
           <div className="h-14 flex items-center justify-between px-3 border-b border-sidebar-border">
             <button 
-              onClick={() => navigate('/')}
+              onClick={() => {
+                if (isNavExpanded) {
+                  navigate('/');
+                } else {
+                  setIsNavExpanded(true);
+                }
+              }}
               className={`${isNavExpanded ? 'justify-start gap-1' : 'w-9 justify-center mx-auto'} h-9 flex items-center transition-all duration-300 group`}
-              title="返回首页"
+              title={isNavExpanded ? "返回首页" : "展开导航"}
             >
               <span className="font-display font-bold text-primary text-base shrink-0 transition-all duration-300 group-hover:scale-110">B</span>
               {isNavExpanded && <span className="font-display font-medium text-primary text-sm truncate">lueWhale</span>}

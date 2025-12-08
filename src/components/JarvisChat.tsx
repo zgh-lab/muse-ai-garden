@@ -312,7 +312,18 @@ export function JarvisChat({ onNewChat }: JarvisChatProps) {
   };
 
   return (
-    <div className="flex h-full w-full bg-background">
+    <div className="flex h-full w-full bg-background relative">
+      {/* Asset Library Toggle Button - Top Right */}
+      <Button
+        variant={showAssetLibrary ? "default" : "outline"}
+        size="sm"
+        onClick={() => setShowAssetLibrary(!showAssetLibrary)}
+        className="absolute top-4 right-4 z-20 gap-2"
+      >
+        <Library className="h-4 w-4" />
+        资产库
+      </Button>
+
       {/* Main Chat Area */}
       <ResizablePanelGroup direction="horizontal" className="flex-1">
         <ResizablePanel defaultSize={showAssetLibrary ? 70 : 100} minSize={50}>
@@ -349,7 +360,7 @@ export function JarvisChat({ onNewChat }: JarvisChatProps) {
             <div className="border-t border-border/40 p-5 bg-background">
               <div className="max-w-3xl mx-auto space-y-4">
                 {/* Mode Tabs */}
-                <div className="flex gap-2 items-center">
+                <div className="flex gap-2">
                   {chatModes.map((mode) => {
                     const Icon = mode.icon;
                     const isActive = chatMode === mode.id;
@@ -368,20 +379,6 @@ export function JarvisChat({ onNewChat }: JarvisChatProps) {
                       </button>
                     );
                   })}
-                  
-                  <div className="h-5 w-px bg-border mx-1" />
-                  
-                  <button
-                    onClick={() => setShowAssetLibrary(!showAssetLibrary)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                      showAssetLibrary
-                        ? "bg-primary text-primary-foreground shadow-soft"
-                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
-                    }`}
-                  >
-                    <Library className="h-4 w-4" />
-                    资产库
-                  </button>
                 </div>
 
                 {/* Input */}

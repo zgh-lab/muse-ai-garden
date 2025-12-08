@@ -312,12 +312,7 @@ export function JarvisChat({ onNewChat }: JarvisChatProps) {
   };
 
   return (
-    <div className="flex h-full w-full bg-living-gradient relative overflow-hidden">
-      {/* Ambient glow background effect */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-breathe-slow" />
-        <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-primary/3 rounded-full blur-3xl animate-breathe" style={{ animationDelay: '2s' }} />
-      </div>
+    <div className="flex h-full w-full bg-background relative overflow-hidden">
 
       {/* Asset Library Toggle Button - Top Right */}
       <Button

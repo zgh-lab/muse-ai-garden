@@ -220,33 +220,49 @@ export function AppSidebar({ onHoverExpandChange, onNewChat, onSelectChat }: App
           <div className="pb-3 px-2 space-y-1 relative z-50 pointer-events-auto">
             {/* Panel Toggle (only on Jarvis page when panel is closed) */}
             {isJarvisPage && !isPanelOpen && (
-              <button
-                type="button"
-                onClick={() => {
-                  console.log('Panel toggle clicked');
-                  setIsPanelOpen(true);
-                }}
-                className={`${isNavExpanded ? 'w-full justify-start px-3 gap-3' : 'w-10 justify-center mx-auto'} h-10 rounded-xl flex items-center text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-all duration-200 cursor-pointer pointer-events-auto`}
-                title="打开对话历史"
-              >
-                <MessageSquare className="h-5 w-5 shrink-0 pointer-events-none" />
-                {isNavExpanded && <span className="text-sm pointer-events-none">对话历史</span>}
-              </button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      console.log('Panel toggle clicked');
+                      setIsPanelOpen(true);
+                    }}
+                    className={`${isNavExpanded ? 'w-full justify-start px-3 gap-3' : 'w-10 justify-center mx-auto'} h-10 rounded-xl flex items-center text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-all duration-200 cursor-pointer pointer-events-auto`}
+                  >
+                    <MessageSquare className="h-5 w-5 shrink-0 pointer-events-none" />
+                    {isNavExpanded && <span className="text-sm pointer-events-none">对话历史</span>}
+                  </button>
+                </TooltipTrigger>
+                {!isNavExpanded && (
+                  <TooltipContent side="right" sideOffset={8}>
+                    打开对话历史
+                  </TooltipContent>
+                )}
+              </Tooltip>
             )}
             
             {/* Nav Expand/Collapse Toggle */}
-            <button
-              type="button"
-              onClick={() => {
-                console.log('Nav toggle clicked, current:', isNavExpanded);
-                setIsNavExpanded(!isNavExpanded);
-              }}
-              className={`${isNavExpanded ? 'w-full justify-start px-3 gap-3' : 'w-10 justify-center mx-auto'} h-10 rounded-xl flex items-center text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-all duration-200 cursor-pointer pointer-events-auto`}
-              title={isNavExpanded ? "收起导航" : "展开导航"}
-            >
-              {isNavExpanded ? <PanelLeftClose className="h-5 w-5 shrink-0 pointer-events-none" /> : <PanelLeft className="h-5 w-5 pointer-events-none" />}
-              {isNavExpanded && <span className="text-sm pointer-events-none">收起导航</span>}
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  onClick={() => {
+                    console.log('Nav toggle clicked, current:', isNavExpanded);
+                    setIsNavExpanded(!isNavExpanded);
+                  }}
+                  className={`${isNavExpanded ? 'w-full justify-start px-3 gap-3' : 'w-10 justify-center mx-auto'} h-10 rounded-xl flex items-center text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-all duration-200 cursor-pointer pointer-events-auto`}
+                >
+                  {isNavExpanded ? <PanelLeftClose className="h-5 w-5 shrink-0 pointer-events-none" /> : <PanelLeft className="h-5 w-5 pointer-events-none" />}
+                  {isNavExpanded && <span className="text-sm pointer-events-none">收起导航</span>}
+                </button>
+              </TooltipTrigger>
+              {!isNavExpanded && (
+                <TooltipContent side="right" sideOffset={8}>
+                  {isNavExpanded ? "收起导航" : "展开导航"}
+                </TooltipContent>
+              )}
+            </Tooltip>
           </div>
         </div>
 

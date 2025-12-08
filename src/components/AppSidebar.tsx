@@ -126,21 +126,33 @@ export function AppSidebar({ onHoverExpandChange, onNewChat, onSelectChat }: App
         {/* Left Column - Icon Navigation (Expandable) */}
         <div className={`${isNavExpanded ? 'w-44' : 'w-14'} bg-sidebar flex flex-col border-r border-sidebar-border shrink-0 transition-all duration-300 relative z-10`}>
           {/* Logo */}
-          <div className="h-14 flex items-center px-3 border-b border-sidebar-border">
+          <div className="h-14 flex items-center justify-between px-3 border-b border-sidebar-border">
             <button 
-              onClick={() => {
-                if (isNavExpanded) {
-                  navigate('/');
-                } else {
-                  setIsNavExpanded(true);
-                }
-              }}
-              className={`${isNavExpanded ? 'w-full justify-start gap-2 px-2' : 'w-9 justify-center mx-auto'} h-9 rounded-xl bg-primary/15 flex items-center hover:bg-primary/25 hover:shadow-glow transition-all duration-300 group`}
-              title={isNavExpanded ? "返回首页" : "展开导航"}
+              onClick={() => navigate('/')}
+              className={`${isNavExpanded ? 'justify-start gap-1' : 'w-9 justify-center mx-auto'} h-9 flex items-center transition-all duration-300 group`}
+              title="返回首页"
             >
-              <span className="font-display font-bold text-primary text-sm shrink-0 transition-all duration-300 group-hover:scale-110 animate-glow-pulse">B</span>
+              <span className="font-display font-bold text-primary text-base shrink-0 transition-all duration-300 group-hover:scale-110">B</span>
               {isNavExpanded && <span className="font-display font-medium text-primary text-sm truncate">lueWhale</span>}
             </button>
+            
+            {/* Collapse toggle - only show when expanded */}
+            {isNavExpanded && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    onClick={() => setIsNavExpanded(false)}
+                    className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-all duration-200"
+                  >
+                    <PanelLeftClose className="h-4 w-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="right" sideOffset={8}>
+                  收起导航
+                </TooltipContent>
+              </Tooltip>
+            )}
           </div>
 
           {/* Navigation Icons */}
@@ -242,27 +254,23 @@ export function AppSidebar({ onHoverExpandChange, onNewChat, onSelectChat }: App
               </Tooltip>
             )}
             
-            {/* Nav Expand/Collapse Toggle */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  onClick={() => {
-                    console.log('Nav toggle clicked, current:', isNavExpanded);
-                    setIsNavExpanded(!isNavExpanded);
-                  }}
-                  className={`${isNavExpanded ? 'w-full justify-start px-3 gap-3' : 'w-10 justify-center mx-auto'} h-10 rounded-xl flex items-center text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-all duration-200 cursor-pointer pointer-events-auto`}
-                >
-                  {isNavExpanded ? <PanelLeftClose className="h-5 w-5 shrink-0 pointer-events-none" /> : <PanelLeft className="h-5 w-5 pointer-events-none" />}
-                  {isNavExpanded && <span className="text-sm pointer-events-none">收起导航</span>}
-                </button>
-              </TooltipTrigger>
-              {!isNavExpanded && (
+            {/* Nav Expand Toggle - only show when collapsed */}
+            {!isNavExpanded && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    onClick={() => setIsNavExpanded(true)}
+                    className="w-10 h-10 rounded-xl flex items-center justify-center mx-auto text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-all duration-200 cursor-pointer pointer-events-auto"
+                  >
+                    <PanelLeft className="h-5 w-5 pointer-events-none" />
+                  </button>
+                </TooltipTrigger>
                 <TooltipContent side="right" sideOffset={8}>
-                  {isNavExpanded ? "收起导航" : "展开导航"}
+                  展开导航
                 </TooltipContent>
-              )}
-            </Tooltip>
+              </Tooltip>
+            )}
           </div>
         </div>
 

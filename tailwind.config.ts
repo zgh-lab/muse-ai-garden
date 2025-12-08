@@ -75,6 +75,9 @@ export default {
       boxShadow: {
         'soft': '0 2px 8px -2px rgba(0, 0, 0, 0.3)',
         'elevated': '0 4px 16px -4px rgba(0, 0, 0, 0.4)',
+        'glow': '0 0 20px hsl(190 90% 50% / 0.3)',
+        'glow-lg': '0 0 40px hsl(190 90% 50% / 0.4)',
+        'inner-glow': 'inset 0 0 20px hsl(190 90% 50% / 0.15)',
       },
       keyframes: {
         "accordion-down": {
@@ -85,10 +88,25 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "living-pulse": {
+          "0%, 100%": { opacity: "1", transform: "scale(1)" },
+          "50%": { opacity: "0.85", transform: "scale(1.01)" },
+        },
+        "icon-breathe": {
+          "0%, 100%": { transform: "scale(1)", filter: "brightness(1)" },
+          "50%": { transform: "scale(1.08)", filter: "brightness(1.2)" },
+        },
+        "gentle-bob": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-4px)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "living-pulse": "living-pulse 4s ease-in-out infinite",
+        "icon-breathe": "icon-breathe 3s ease-in-out infinite",
+        "gentle-bob": "gentle-bob 3s ease-in-out infinite",
       },
     },
   },

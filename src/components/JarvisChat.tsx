@@ -312,15 +312,23 @@ export function JarvisChat({ onNewChat }: JarvisChatProps) {
   };
 
   return (
-    <div className="flex h-full w-full bg-background relative">
+    <div className="flex h-full w-full bg-living-gradient relative overflow-hidden">
+      {/* Ambient glow background effect */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-breathe-slow" />
+        <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-primary/3 rounded-full blur-3xl animate-breathe" style={{ animationDelay: '2s' }} />
+      </div>
+
       {/* Asset Library Toggle Button - Top Right */}
       <Button
         variant={showAssetLibrary ? "default" : "outline"}
         size="sm"
         onClick={() => setShowAssetLibrary(!showAssetLibrary)}
-        className="absolute top-4 right-4 z-20 gap-2"
+        className={`absolute top-4 right-4 z-20 gap-2 transition-all duration-300 living-hover living-active ${
+          showAssetLibrary ? "animate-pulse-glow glow-primary-subtle" : "hover:glow-primary-subtle"
+        }`}
       >
-        <Library className="h-4 w-4" />
+        <Library className={`h-4 w-4 transition-transform duration-300 ${showAssetLibrary ? "animate-icon-breathe" : ""}`} />
         资产库
       </Button>
 
@@ -335,18 +343,19 @@ export function JarvisChat({ onNewChat }: JarvisChatProps) {
                 {messages.map((message, index) => (
                   <div
                     key={index}
-                    className={`flex gap-4 animate-fade-in ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                    className={`flex gap-4 animate-scale-in ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                    style={{ animationDelay: `${index * 0.05}s` }}
                   >
                     {message.role === "assistant" && (
-                      <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shrink-0">
-                        <Bot className="h-5 w-5 text-primary" />
+                      <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary/25 to-primary/5 flex items-center justify-center shrink-0 animate-gentle-bob glow-primary-subtle">
+                        <Bot className="h-5 w-5 text-primary animate-glow-pulse" />
                       </div>
                     )}
                     <div
-                      className={`rounded-2xl px-5 py-3 max-w-[75%] text-sm leading-relaxed ${
+                      className={`rounded-2xl px-5 py-3 max-w-[75%] text-sm leading-relaxed transition-all duration-300 hover:scale-[1.01] ${
                         message.role === "user"
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-secondary/70"
+                          ? "bg-primary text-primary-foreground glow-primary-subtle"
+                          : "bg-secondary/70 hover:bg-secondary/80 card-alive"
                       }`}
                     >
                       {message.content}
@@ -357,24 +366,28 @@ export function JarvisChat({ onNewChat }: JarvisChatProps) {
             </ScrollArea>
 
             {/* Input Area */}
-            <div className="border-t border-border/40 p-5 bg-background">
+            <div className="border-t border-border/40 p-5 bg-background/80 backdrop-blur-sm relative">
+              {/* Subtle glow line on border */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent animate-breathe" />
+              
               <div className="max-w-3xl mx-auto space-y-4">
                 {/* Mode Tabs */}
                 <div className="flex gap-2">
-                  {chatModes.map((mode) => {
+                  {chatModes.map((mode, idx) => {
                     const Icon = mode.icon;
                     const isActive = chatMode === mode.id;
                     return (
                       <button
                         key={mode.id}
                         onClick={() => handleModeChange(mode.id)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                        className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 living-active ${
                           isActive
-                            ? "bg-primary text-primary-foreground shadow-soft"
-                            : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
+                            ? "bg-primary text-primary-foreground shadow-glow animate-pulse-glow"
+                            : "text-muted-foreground hover:text-foreground hover:bg-secondary/60 hover:scale-105"
                         }`}
+                        style={{ animationDelay: `${idx * 0.1}s` }}
                       >
-                        <Icon className="h-4 w-4" />
+                        <Icon className={`h-4 w-4 transition-all duration-300 ${isActive ? "animate-icon-breathe" : ""}`} />
                         {mode.label}
                       </button>
                     );
@@ -382,7 +395,10 @@ export function JarvisChat({ onNewChat }: JarvisChatProps) {
                 </div>
 
                 {/* Input */}
-                <div className="flex gap-3 items-center">
+                <div className="flex gap-3 items-center relative group">
+                  {/* Input glow effect on focus */}
+                  <div className="absolute inset-0 -m-1 rounded-2xl bg-primary/0 group-focus-within:bg-primary/5 transition-all duration-500 blur-xl pointer-events-none" />
+                  
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -391,8 +407,13 @@ export function JarvisChat({ onNewChat }: JarvisChatProps) {
                     className="hidden"
                     accept="image/*,video/*,audio/*,.pdf,.doc,.docx"
                   />
-                  <Button variant="ghost" size="icon" onClick={handleFileButtonClick} className="shrink-0">
-                    <Paperclip className="h-5 w-5" />
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={handleFileButtonClick} 
+                    className="shrink-0 transition-all duration-300 hover:scale-110 hover:text-primary hover:bg-primary/10 living-active"
+                  >
+                    <Paperclip className="h-5 w-5 transition-transform duration-300 hover:rotate-12" />
                   </Button>
                   <Input
                     placeholder={
@@ -404,10 +425,14 @@ export function JarvisChat({ onNewChat }: JarvisChatProps) {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    className="flex-1 h-12 text-base"
+                    className="flex-1 h-12 text-base transition-all duration-300 focus:shadow-glow focus:border-primary/50 relative z-10"
                   />
-                  <Button onClick={handleSend} size="icon" className="h-11 w-11 shrink-0">
-                    <Send className="h-5 w-5" />
+                  <Button 
+                    onClick={handleSend} 
+                    size="icon" 
+                    className="h-11 w-11 shrink-0 transition-all duration-300 hover:scale-110 hover:shadow-glow-lg living-active group/send"
+                  >
+                    <Send className="h-5 w-5 transition-transform duration-300 group-hover/send:translate-x-0.5 group-hover/send:-translate-y-0.5" />
                   </Button>
                 </div>
 

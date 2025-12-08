@@ -286,7 +286,8 @@ export function WhaleAnimation() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none opacity-50"
+      className="absolute inset-0 w-full h-full pointer-events-none opacity-60 animate-breathe-slow"
+      style={{ filter: 'drop-shadow(0 0 30px hsl(190 90% 50% / 0.2))' }}
     />
   );
 }

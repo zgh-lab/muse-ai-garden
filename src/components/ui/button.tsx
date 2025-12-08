@@ -5,16 +5,17 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-[0.97]",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/85 hover:shadow-soft",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline: "border border-border bg-transparent hover:bg-secondary/80 text-foreground",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/70",
-        ghost: "hover:bg-secondary/60 text-muted-foreground hover:text-foreground",
+        default: "bg-primary text-primary-foreground hover:bg-primary/85 hover:shadow-glow hover:scale-[1.02]",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:shadow-soft",
+        outline: "border border-border bg-transparent hover:bg-secondary/80 hover:border-primary/30 text-foreground hover:scale-[1.02]",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/70 hover:scale-[1.02]",
+        ghost: "hover:bg-secondary/60 text-muted-foreground hover:text-foreground hover:scale-[1.03]",
         link: "text-primary underline-offset-4 hover:underline",
+        glow: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-glow hover:shadow-glow-lg hover:scale-[1.03] animate-pulse-glow",
       },
       size: {
         default: "h-9 px-5 py-2",

@@ -135,10 +135,10 @@ export function AppSidebar({ onHoverExpandChange, onNewChat, onSelectChat }: App
                   setIsNavExpanded(true);
                 }
               }}
-              className={`${isNavExpanded ? 'w-full justify-start gap-2 px-2' : 'w-9 justify-center mx-auto'} h-9 rounded-xl bg-primary/15 flex items-center hover:bg-primary/25 transition-all duration-300`}
+              className={`${isNavExpanded ? 'w-full justify-start gap-2 px-2' : 'w-9 justify-center mx-auto'} h-9 rounded-xl bg-primary/15 flex items-center hover:bg-primary/25 hover:shadow-glow transition-all duration-300 group`}
               title={isNavExpanded ? "返回首页" : "展开导航"}
             >
-              <span className="font-display font-bold text-primary text-sm shrink-0">B</span>
+              <span className="font-display font-bold text-primary text-sm shrink-0 transition-all duration-300 group-hover:scale-110 animate-glow-pulse">B</span>
               {isNavExpanded && <span className="font-display font-medium text-primary text-sm truncate">lueWhale</span>}
             </button>
           </div>
@@ -161,14 +161,14 @@ export function AppSidebar({ onHoverExpandChange, onNewChat, onSelectChat }: App
                       {item.url ? (
                         <NavLink
                           to={item.url}
-                          className={`${isNavExpanded ? 'w-full justify-start px-3 gap-3' : 'w-10 justify-center mx-auto'} h-10 rounded-xl flex items-center transition-all duration-200 ${
+                          className={`${isNavExpanded ? 'w-full justify-start px-3 gap-3' : 'w-10 justify-center mx-auto'} h-10 rounded-xl flex items-center transition-all duration-300 group/nav ${
                             isActive 
-                              ? 'bg-primary/15 text-primary' 
-                              : 'text-muted-foreground hover:bg-sidebar-accent hover:text-foreground'
+                              ? 'bg-primary/15 text-primary shadow-inner-glow' 
+                              : 'text-muted-foreground hover:bg-sidebar-accent hover:text-foreground hover:scale-105'
                           }`}
-                          activeClassName="bg-primary/15 text-primary"
+                          activeClassName="bg-primary/15 text-primary shadow-inner-glow"
                         >
-                          <item.icon className="h-5 w-5 shrink-0" />
+                          <item.icon className={`h-5 w-5 shrink-0 transition-all duration-300 ${isActive ? 'animate-icon-breathe' : 'group-hover/nav:scale-110'}`} />
                           {isNavExpanded && <span className="text-sm truncate">{item.title}</span>}
                         </NavLink>
                       ) : (
@@ -275,10 +275,10 @@ export function AppSidebar({ onHoverExpandChange, onNewChat, onSelectChat }: App
             <div className="p-3">
               <Button 
                 onClick={onNewChat}
-                className="w-full justify-center gap-2 h-9 text-sm rounded-xl"
+                className="w-full justify-center gap-2 h-9 text-sm rounded-xl group"
                 variant="default"
               >
-                <Plus className="h-4 w-4" />
+                <Plus className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
                 新建对话
               </Button>
             </div>
@@ -321,13 +321,13 @@ export function AppSidebar({ onHoverExpandChange, onNewChat, onSelectChat }: App
                         </Button>
                       </div>
                     ) : (
-                      <div className="flex items-center">
+                      <div className="flex items-center group/chat">
                         <button 
                           onClick={() => onSelectChat?.(chat.id)}
-                          className="flex-1 text-left px-2.5 py-2 rounded-lg text-xs hover:bg-secondary/60 transition-all duration-200"
+                          className="flex-1 text-left px-2.5 py-2 rounded-lg text-xs hover:bg-secondary/60 transition-all duration-300 hover:translate-x-1 card-alive"
                         >
                           <div className="flex items-center gap-2">
-                            <MessageSquare className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                            <MessageSquare className="h-3.5 w-3.5 text-muted-foreground shrink-0 transition-transform duration-300 group-hover/chat:scale-110" />
                             <span className="truncate text-foreground/90">{chat.title}</span>
                           </div>
                           <div className="text-[10px] text-muted-foreground mt-0.5 ml-5">{chat.timestamp}</div>

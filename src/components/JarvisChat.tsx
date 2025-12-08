@@ -16,7 +16,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { AssetLibraryFloating } from "@/components/AssetLibraryFloating";
-import { WhaleAnimation } from "@/components/WhaleAnimation";
+
 
 interface Message {
   role: "user" | "assistant";
@@ -333,7 +333,7 @@ export function JarvisChat({ onNewChat }: JarvisChatProps) {
           <div className="flex flex-col h-full">
             {/* Messages */}
             <ScrollArea className="flex-1 px-6 py-6 relative">
-              <WhaleAnimation />
+              
               <div className="max-w-3xl mx-auto space-y-5 relative z-10">
                 {messages.map((message, index) => (
                   <div

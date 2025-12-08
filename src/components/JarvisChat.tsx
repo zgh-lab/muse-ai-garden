@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { mockAssets } from "@/data/mockAssets";
-import { Send, Bot, Image, Video, Music, MessageCircle, Library, Tag as TagIcon, ChevronDown, Paperclip, Plus, X, Check, Pencil, Trash2 } from "lucide-react";
+import { Send, Bot, Image, Video, Music, MessageCircle, Library, Tag as TagIcon, ChevronDown, Paperclip, Plus, X, Check, Pencil, Trash2, Sparkles } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import jarvisIcon from "@/assets/jarvis-icon.png";
 import { Button } from "@/components/ui/button";
@@ -89,6 +89,7 @@ export function JarvisChat({ onNewChat }: JarvisChatProps) {
   const [imageCount, setImageCount] = useState("1");
   const [selectedImageTools, setSelectedImageTools] = useState<string[]>(["即梦4.0"]);
   const [language, setLanguage] = useState<"zh" | "en">("zh");
+  const [promptExpansion, setPromptExpansion] = useState(false);
   
   const imageModelConfigs: Record<string, { aspectRatios: string[], resolutions: string[], defaultAspectRatio: string, defaultResolution: string }> = {
     "即梦4.0": {
@@ -515,6 +516,16 @@ export function JarvisChat({ onNewChat }: JarvisChatProps) {
                         </Button>
                       </PopoverContent>
                     </Popover>
+                    
+                    <Button 
+                      variant={promptExpansion ? "default" : "outline"} 
+                      size="sm" 
+                      className="h-7 text-xs gap-1"
+                      onClick={() => setPromptExpansion(!promptExpansion)}
+                    >
+                      <Sparkles className="h-3 w-3" />
+                      扩写
+                    </Button>
                     
                     {selectedTags.length > 0 && (
                       <div className="flex gap-1 flex-wrap">

@@ -9,6 +9,7 @@ interface Particle {
   vy: number;
   size: number;
   alpha: number;
+  hue: number;
 }
 
 export function WhaleAnimation() {
@@ -86,8 +87,8 @@ export function WhaleAnimation() {
       });
 
       // 添加内部细节点（腹部纹理）
-      for (let i = 0; i < 8; i++) {
-        const t = i / 8;
+      for (let i = 0; i < 12; i++) {
+        const t = i / 12;
         points.push({
           x: centerX + (0.15 + t * 0.35 - 0.5) * scale,
           y: centerY + (0.06 + Math.sin(t * Math.PI) * 0.04) * scale,
@@ -107,8 +108,9 @@ export function WhaleAnimation() {
       const whalePoints = getWhalePoints(centerX, centerY, scale);
       const particles: Particle[] = [];
 
-      // 从鲸鱼轮廓点创建粒子
-      whalePoints.forEach((point) => {
+      // 从鲸鱼轮廓点创建粒子 - 增加粒子大小
+      whalePoints.forEach((point, i) => {
+        const hueOffset = (i / whalePoints.length) * 60; // 0-60 hue range
         particles.push({
           x: point.x,
           y: point.y,
@@ -116,16 +118,18 @@ export function WhaleAnimation() {
           baseY: point.y,
           vx: (Math.random() - 0.5) * 0.5,
           vy: (Math.random() - 0.5) * 0.5,
-          size: Math.random() * 2 + 1,
-          alpha: Math.random() * 0.5 + 0.3,
+          size: Math.random() * 3 + 2, // 增大粒子
+          alpha: Math.random() * 0.6 + 0.4, // 提高透明度
+          hue: 180 + hueOffset, // 青色到蓝绿色渐变
         });
       });
 
-      // 添加额外的随机粒子填充鲸鱼形状
-      for (let i = 0; i < 80; i++) {
+      // 添加更多随机粒子填充鲸鱼形状
+      for (let i = 0; i < 120; i++) {
         const t = Math.random();
         const bodyX = centerX + (t * 0.8 - 0.4) * scale;
         const bodyY = centerY + (Math.sin(t * Math.PI) * 0.08 - 0.02) * scale + (Math.random() - 0.5) * scale * 0.15;
+        const hueOffset = t * 60;
         
         particles.push({
           x: bodyX,
@@ -134,8 +138,9 @@ export function WhaleAnimation() {
           baseY: bodyY,
           vx: (Math.random() - 0.5) * 0.3,
           vy: (Math.random() - 0.5) * 0.3,
-          size: Math.random() * 1.5 + 0.5,
-          alpha: Math.random() * 0.3 + 0.1,
+          size: Math.random() * 2 + 1,
+          alpha: Math.random() * 0.4 + 0.2,
+          hue: 175 + hueOffset + Math.random() * 20,
         });
       }
 
@@ -143,7 +148,7 @@ export function WhaleAnimation() {
     };
 
     const drawConnections = (ctx: CanvasRenderingContext2D, particles: Particle[]) => {
-      const maxDistance = 50;
+      const maxDistance = 60;
 
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
@@ -152,10 +157,11 @@ export function WhaleAnimation() {
           const distance = Math.sqrt(dx * dx + dy * dy);
 
           if (distance < maxDistance) {
-            const alpha = (1 - distance / maxDistance) * 0.15;
+            const alpha = (1 - distance / maxDistance) * 0.35;
+            const avgHue = (particles[i].hue + particles[j].hue) / 2;
             ctx.beginPath();
-            ctx.strokeStyle = `hsla(var(--primary), ${alpha})`;
-            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = `hsla(${avgHue}, 70%, 55%, ${alpha})`;
+            ctx.lineWidth = 0.8;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             ctx.stroke();
@@ -175,19 +181,19 @@ export function WhaleAnimation() {
       timeRef.current += 0.008;
 
       // 鲸鱼缓慢游动
-      whaleOffsetRef.current.x = Math.sin(timeRef.current * 0.5) * 20;
-      whaleOffsetRef.current.y = Math.sin(timeRef.current * 0.3) * 10;
+      whaleOffsetRef.current.x = Math.sin(timeRef.current * 0.5) * 25;
+      whaleOffsetRef.current.y = Math.sin(timeRef.current * 0.3) * 12;
 
       const particles = particlesRef.current;
 
       // 更新粒子位置
       particles.forEach((particle, index) => {
         // 基于时间的波动
-        const waveX = Math.sin(timeRef.current + index * 0.1) * 3;
-        const waveY = Math.cos(timeRef.current * 0.8 + index * 0.15) * 2;
+        const waveX = Math.sin(timeRef.current + index * 0.1) * 4;
+        const waveY = Math.cos(timeRef.current * 0.8 + index * 0.15) * 3;
 
         // 呼吸效果
-        const breathScale = 1 + Math.sin(timeRef.current * 0.5) * 0.02;
+        const breathScale = 1 + Math.sin(timeRef.current * 0.5) * 0.025;
         const centerX = width * 0.5 + whaleOffsetRef.current.x;
         const centerY = height * 0.5 + whaleOffsetRef.current.y;
 
@@ -198,18 +204,27 @@ export function WhaleAnimation() {
         particle.x = centerX + (particle.x - centerX) * breathScale;
         particle.y = centerY + (particle.y - centerY) * breathScale;
 
+        // 动态调整颜色
+        particle.hue = particle.hue + Math.sin(timeRef.current + index * 0.05) * 0.5;
+
         // 更新透明度
-        particle.alpha = 0.2 + Math.sin(timeRef.current + index * 0.2) * 0.15 + 0.15;
+        particle.alpha = 0.3 + Math.sin(timeRef.current + index * 0.2) * 0.2 + 0.2;
       });
 
       // 绘制连接线
       drawConnections(ctx, particles);
 
-      // 绘制粒子
+      // 绘制粒子 - 使用渐变色
       particles.forEach((particle) => {
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(var(--primary), ${particle.alpha})`;
+        ctx.fillStyle = `hsla(${particle.hue}, 75%, 60%, ${particle.alpha})`;
+        ctx.fill();
+        
+        // 添加发光效果
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size * 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${particle.hue}, 80%, 65%, ${particle.alpha * 0.3})`;
         ctx.fill();
       });
 
@@ -232,7 +247,7 @@ export function WhaleAnimation() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none opacity-30"
+      className="absolute inset-0 w-full h-full pointer-events-none opacity-50"
     />
   );
 }

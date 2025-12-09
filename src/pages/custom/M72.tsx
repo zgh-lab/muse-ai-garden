@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { AppSidebar } from "@/components/AppSidebar";
-import { UserMenu } from "@/components/UserMenu";
+import { TopNavbar } from "@/components/TopNavbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -243,18 +242,10 @@ export default function M72() {
   );
 
   return (
-    <div className="min-h-screen flex w-full bg-background">
-      <AppSidebar />
+    <div className="min-h-screen flex flex-col w-full bg-background">
+      <TopNavbar />
       
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Header */}
-        <header className="h-14 border-b border-border/30 flex items-center px-6 bg-card/50 backdrop-blur-sm">
-          <h1 className="text-lg font-medium text-foreground">M72 · 创意工坊</h1>
-          <div className="flex-1" />
-          <UserMenu />
-        </header>
-
-        <main className="flex-1 overflow-hidden flex">
+      <main className="flex-1 overflow-hidden flex">
           {/* 功能标签页 */}
           <div className="w-52 border-r border-border/30 bg-card/30">
             <ScrollArea className="h-full py-4">
@@ -781,7 +772,6 @@ export default function M72() {
             </div>
           </ScrollArea>
         </main>
-      </div>
     </div>
   );
 }

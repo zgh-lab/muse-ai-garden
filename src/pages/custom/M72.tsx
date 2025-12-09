@@ -170,28 +170,31 @@ export default function M72() {
     label?: string;
     hint?: string;
   }) => (
-    <div className="space-y-2 flex-1">
-      {label && <Label className="text-sm text-muted-foreground">{label}</Label>}
+    <div className="space-y-3 flex-1">
+      {label && <Label className="text-sm font-medium text-foreground/80">{label}</Label>}
       <div 
-        className="border border-dashed border-border/60 rounded-xl aspect-[4/5] flex flex-col items-center justify-center cursor-pointer hover:bg-secondary/20 hover:border-primary/40 transition-all duration-200 relative"
+        className="border-2 border-dashed border-border/50 rounded-2xl aspect-square flex flex-col items-center justify-center cursor-pointer hover:bg-primary/5 hover:border-primary/50 transition-all duration-300 relative group"
         onClick={() => document.getElementById(id)?.click()}
       >
         {image ? (
           <>
-            <img src={image} alt="上传图片" className="w-full h-full object-contain rounded-xl p-2" />
+            <img src={image} alt="上传图片" className="w-full h-full object-contain rounded-2xl p-3" />
             <button
               onClick={(e) => { e.stopPropagation(); onRemove(); }}
-              className="absolute top-2 right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center hover:scale-110 transition-transform"
+              className="absolute top-3 right-3 w-7 h-7 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
             >
-              <X className="h-3 w-3" />
+              <X className="h-3.5 w-3.5" />
             </button>
           </>
         ) : (
-          <>
-            <Upload className="h-8 w-8 text-muted-foreground/40 mb-3" />
-            <span className="text-sm text-muted-foreground">点击上传 或 Ctrl+V 粘贴</span>
-            <span className="text-xs text-muted-foreground/60 mt-1">{hint}</span>
-          </>
+          <div className="flex flex-col items-center justify-center p-6">
+            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+              <Upload className="h-6 w-6 text-primary/60 group-hover:text-primary transition-colors" />
+            </div>
+            <span className="text-sm font-medium text-foreground/70">点击上传</span>
+            <span className="text-xs text-muted-foreground mt-1">或 Ctrl+V 粘贴</span>
+            {hint && <span className="text-xs text-muted-foreground/50 mt-2">{hint}</span>}
+          </div>
         )}
       </div>
       <input id={id} type="file" accept="image/*" className="hidden" onChange={onUpload} />
@@ -201,11 +204,13 @@ export default function M72() {
   // 渲染结果预览区域
   const ResultPanel = ({ title, emptyText = "等待输入数据" }: { title: string; emptyText?: string }) => (
     <div className="flex-1 flex flex-col">
-      <Label className="text-sm text-muted-foreground mb-2">{title}</Label>
-      <div className="flex-1 border border-border/40 rounded-xl bg-secondary/10 flex flex-col items-center justify-center min-h-[400px]">
-        <div className="text-center text-muted-foreground/40">
-          <div className="w-1 h-1 bg-primary rounded-full mx-auto mb-2 animate-pulse" />
-          <span className="text-sm">{emptyText}</span>
+      <Label className="text-sm font-medium text-foreground/80 mb-3">{title}</Label>
+      <div className="flex-1 border border-border/30 rounded-2xl bg-card/50 flex flex-col items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+            <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+          </div>
+          <span className="text-sm text-muted-foreground">{emptyText}</span>
         </div>
       </div>
     </div>
@@ -217,85 +222,96 @@ export default function M72() {
       
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <header className="h-14 border-b border-border/40 flex items-center px-5 bg-background/80 backdrop-blur-sm">
-          <h1 className="text-lg font-medium text-foreground">M72 · 法宝炼制</h1>
+        <header className="h-14 border-b border-border/30 flex items-center px-6 bg-card/50 backdrop-blur-sm">
+          <h1 className="text-lg font-medium text-foreground">M72 · 创意工坊</h1>
           <div className="flex-1" />
           <UserMenu />
         </header>
 
         <main className="flex-1 overflow-hidden flex">
           {/* 功能标签页 */}
-          <div className="w-48 border-r border-border/40 bg-sidebar/30">
-            <ScrollArea className="h-full py-3">
-              {menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveMenu(item.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-all duration-200 ${
-                    activeMenu === item.id
-                      ? "bg-primary/10 text-primary border-l-2 border-primary"
-                      : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground border-l-2 border-transparent"
-                  }`}
-                >
-                  <item.icon className={`h-4 w-4 shrink-0 ${activeMenu === item.id ? 'text-primary' : ''}`} />
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-sm font-medium truncate">{item.title}</span>
-                    <span className="text-[10px] text-muted-foreground truncate">{item.subtitle}</span>
-                  </div>
-                </button>
-              ))}
+          <div className="w-52 border-r border-border/30 bg-card/30">
+            <ScrollArea className="h-full py-4">
+              <div className="px-3 space-y-1">
+                {menuItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveMenu(item.id)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${
+                      activeMenu === item.id
+                        ? "bg-primary/15 text-primary"
+                        : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
+                    }`}
+                  >
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                      activeMenu === item.id ? 'bg-primary/20' : 'bg-secondary/50'
+                    }`}>
+                      <item.icon className={`h-4 w-4 ${activeMenu === item.id ? 'text-primary' : 'text-muted-foreground'}`} />
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-sm font-medium truncate">{item.title}</span>
+                      <span className="text-[10px] text-muted-foreground/70 truncate">{item.subtitle}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
             </ScrollArea>
           </div>
 
           {/* 主内容区 */}
           <ScrollArea className="flex-1">
-            <div className="p-6">
+            <div className="p-8">
               {/* 法宝炼制 */}
               {activeMenu === "generate" && (
-                <div className="flex gap-6">
-                  <div className="flex-1 max-w-xl">
-                    <div className="mb-6">
-                      <h2 className="text-xl font-medium text-primary">法宝炼制·生成图标</h2>
-                      <p className="text-sm text-muted-foreground mt-1">选择分类（隐含风格）并输入主体，炼制神兵法宝。</p>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl">
+                  <div>
+                    <div className="mb-8">
+                      <h2 className="text-2xl font-medium text-foreground">法宝炼制</h2>
+                      <p className="text-sm text-muted-foreground mt-2">选择分类并输入主体描述，生成神兵法宝图标</p>
                     </div>
-                    <div className="bg-card/30 border border-border/40 rounded-2xl p-6 space-y-6">
+                    <div className="bg-card/50 border border-border/30 rounded-2xl p-6 space-y-6">
                       {/* 结构参考图 */}
-                      <div className="space-y-2">
-                        <Label className="text-sm text-muted-foreground">上图·结构参考图（可选）</Label>
+                      <div className="space-y-3">
+                        <Label className="text-sm font-medium text-foreground/80">结构参考图（可选）</Label>
                         <div 
-                          className="border border-dashed border-border/60 rounded-xl h-28 flex flex-col items-center justify-center cursor-pointer hover:bg-secondary/20 hover:border-primary/40 transition-all duration-200"
+                          className="border-2 border-dashed border-border/50 rounded-2xl h-32 flex flex-col items-center justify-center cursor-pointer hover:bg-primary/5 hover:border-primary/50 transition-all duration-300 group"
                           onClick={() => document.getElementById("structure-upload")?.click()}
                         >
                           {structureImage ? (
-                            <div className="relative w-full h-full p-2">
-                              <img src={structureImage} alt="结构参考" className="w-full h-full object-contain rounded-lg" />
+                            <div className="relative w-full h-full p-3">
+                              <img src={structureImage} alt="结构参考" className="w-full h-full object-contain rounded-xl" />
                               <button
                                 onClick={(e) => { e.stopPropagation(); setStructureImage(null); }}
-                                className="absolute top-1 right-1 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center hover:scale-110 transition-transform"
+                                className="absolute top-2 right-2 w-7 h-7 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
                               >
-                                <X className="h-3 w-3" />
+                                <X className="h-3.5 w-3.5" />
                               </button>
                             </div>
                           ) : (
-                            <>
-                              <ImageIcon className="h-6 w-6 text-muted-foreground/50 mb-2" />
-                              <span className="text-xs text-muted-foreground">点击上传 或 Ctrl+V 粘贴</span>
-                            </>
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                                <ImageIcon className="h-5 w-5 text-primary/60 group-hover:text-primary transition-colors" />
+                              </div>
+                              <div>
+                                <span className="text-sm font-medium text-foreground/70">点击上传</span>
+                                <span className="text-xs text-muted-foreground block">或 Ctrl+V 粘贴</span>
+                              </div>
+                            </div>
                           )}
                         </div>
                         <input id="structure-upload" type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, setStructureImage)} />
                       </div>
 
                       {/* 风格参考图 */}
-                      <div className="space-y-2">
-                        <Label className="text-sm text-muted-foreground">风格参考图（{styleImages.length}/3 张）</Label>
+                      <div className="space-y-3">
+                        <Label className="text-sm font-medium text-foreground/80">风格参考图（{styleImages.length}/3 张）</Label>
                         <div className="flex gap-3 flex-wrap">
                           {styleImages.map((img, index) => (
-                            <div key={index} className="relative w-20 h-20 rounded-xl overflow-hidden border border-border/60 group">
+                            <div key={index} className="relative w-24 h-24 rounded-2xl overflow-hidden border border-border/30 group shadow-sm">
                               <img src={img} alt={`风格${index + 1}`} className="w-full h-full object-cover" />
                               <button
                                 onClick={() => removeStyleImage(index)}
-                                className="absolute top-1 right-1 w-5 h-5 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                className="absolute top-2 right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
                               >
                                 <X className="h-3 w-3" />
                               </button>
@@ -304,9 +320,9 @@ export default function M72() {
                           {styleImages.length < 3 && (
                             <div
                               onClick={() => document.getElementById("style-upload")?.click()}
-                              className="w-20 h-20 rounded-xl border border-dashed border-border/60 flex items-center justify-center cursor-pointer hover:bg-secondary/20 hover:border-primary/40 transition-all duration-200"
+                              className="w-24 h-24 rounded-2xl border-2 border-dashed border-border/50 flex items-center justify-center cursor-pointer hover:bg-primary/5 hover:border-primary/50 transition-all duration-300 group"
                             >
-                              <Upload className="h-5 w-5 text-muted-foreground/50" />
+                              <Upload className="h-5 w-5 text-muted-foreground/50 group-hover:text-primary transition-colors" />
                             </div>
                           )}
                         </div>
@@ -314,10 +330,10 @@ export default function M72() {
                       </div>
 
                       {/* 物品类别 */}
-                      <div className="space-y-2">
-                        <Label className="text-sm text-muted-foreground">物品类别</Label>
+                      <div className="space-y-3">
+                        <Label className="text-sm font-medium text-foreground/80">物品类别</Label>
                         <Select value={category} onValueChange={setCategory}>
-                          <SelectTrigger className="rounded-xl bg-secondary/30 border-border/40">
+                          <SelectTrigger className="h-11 rounded-xl bg-secondary/30 border-border/30">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
@@ -329,31 +345,31 @@ export default function M72() {
                       </div>
 
                       {/* 主体名称 */}
-                      <div className="space-y-2">
-                        <Label className="text-sm text-muted-foreground">主体名称/描述</Label>
+                      <div className="space-y-3">
+                        <Label className="text-sm font-medium text-foreground/80">主体名称/描述</Label>
                         <Input
                           value={itemName}
                           onChange={(e) => setItemName(e.target.value)}
                           placeholder="例如：万魂幡、九转金丹"
-                          className="rounded-xl bg-secondary/30 border-border/40"
+                          className="h-11 rounded-xl bg-secondary/30 border-border/30"
                         />
                       </div>
 
                       {/* 生成数量 */}
-                      <div className="space-y-3">
+                      <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                          <Label className="text-sm text-muted-foreground">生成数量</Label>
-                          <span className="text-sm font-medium text-primary">{generateCount[0]}</span>
+                          <Label className="text-sm font-medium text-foreground/80">生成数量</Label>
+                          <span className="text-sm font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">{generateCount[0]}</span>
                         </div>
                         <Slider value={generateCount} onValueChange={setGenerateCount} min={1} max={4} step={1} />
                       </div>
 
-                      <Button onClick={handleGenerate} disabled={isGenerating || !itemName.trim()} className="w-full h-11 rounded-xl">
+                      <Button onClick={handleGenerate} disabled={isGenerating || !itemName.trim()} className="w-full h-12 rounded-xl text-base font-medium">
                         {isGenerating ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />炼制中...</> : <><Flame className="h-4 w-4 mr-2" />开炉炼制</>}
                       </Button>
                     </div>
                   </div>
-                  <div className="w-[400px]">
+                  <div>
                     <ResultPanel title="生成结果" emptyText="等待输入数据" />
                   </div>
                 </div>
@@ -361,15 +377,15 @@ export default function M72() {
 
               {/* 仙姿绘卷 - 三视图 */}
               {activeMenu === "threeview" && (
-                <div className="flex gap-6">
-                  <div className="flex-1 max-w-md">
-                    <div className="mb-6">
-                      <h2 className="text-xl font-medium text-primary">仙姿绘卷·三视定型</h2>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        上传角色正视图，AI将分别生成侧视图与背视图。<span className="text-primary">经由8K级细节注入重绘后，自动按最高分辨率无损拼接。</span>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl">
+                  <div>
+                    <div className="mb-8">
+                      <h2 className="text-2xl font-medium text-foreground">仙姿绘卷</h2>
+                      <p className="text-sm text-muted-foreground mt-2">
+                        上传角色正视图，AI自动生成侧视图与背视图，8K级细节无损拼接
                       </p>
                     </div>
-                    <div className="bg-card/30 border border-border/40 rounded-2xl p-6">
+                    <div className="bg-card/50 border border-border/30 rounded-2xl p-6">
                       <ImageUploadBox
                         image={threeViewImage}
                         onUpload={(e) => handleImageUpload(e, setThreeViewImage)}
@@ -377,94 +393,98 @@ export default function M72() {
                         id="threeview-upload"
                         label="原画输入（正视图）"
                       />
-                      <Button className="w-full h-11 rounded-xl mt-6" disabled={!threeViewImage}>
+                      <Button className="w-full h-12 rounded-xl mt-6 text-base font-medium" disabled={!threeViewImage}>
                         <Layers className="h-4 w-4 mr-2" />
                         生成高清三视图
                       </Button>
                     </div>
                   </div>
-                  <div className="flex-1">
-                    <ResultPanel title="结构拆解结果" emptyText="等待输入数据" />
+                  <div>
+                    <ResultPanel title="三视图结果" emptyText="等待上传原画" />
                   </div>
                 </div>
               )}
 
               {/* 万象融合 */}
               {activeMenu === "fusion" && (
-                <div>
-                  <div className="mb-6">
-                    <h2 className="text-xl font-medium text-primary">万象融合·灵感引擎</h2>
-                    <p className="text-sm text-muted-foreground mt-1">上传两张图片，AI自动进行元素重组与风格融合。</p>
+                <div className="max-w-5xl">
+                  <div className="mb-8">
+                    <h2 className="text-2xl font-medium text-foreground">万象融合</h2>
+                    <p className="text-sm text-muted-foreground mt-2">上传两张图片，AI自动进行元素重组与风格融合</p>
                   </div>
-                  <div className="bg-card/30 border border-border/40 rounded-2xl p-6">
-                    <div className="flex items-center gap-4 mb-6">
-                      <div className="flex-1 relative">
-                        <span className="absolute -top-2 left-2 px-2 py-0.5 text-xs bg-primary text-primary-foreground rounded z-10">图 1</span>
+                  <div className="bg-card/50 border border-border/30 rounded-2xl p-8">
+                    <div className="grid grid-cols-[1fr,auto,1fr] items-center gap-6 mb-8">
+                      <div className="relative">
+                        <span className="absolute -top-3 left-3 px-3 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-full z-10">图 1</span>
                         <div 
-                          className="border border-dashed border-border/60 rounded-xl aspect-[4/3] flex flex-col items-center justify-center cursor-pointer hover:bg-secondary/20 hover:border-primary/40 transition-all"
+                          className="border-2 border-dashed border-border/50 rounded-2xl aspect-square flex flex-col items-center justify-center cursor-pointer hover:bg-primary/5 hover:border-primary/50 transition-all duration-300 group"
                           onClick={() => document.getElementById("fusion1-upload")?.click()}
                         >
                           {fusionImage1 ? (
                             <div className="relative w-full h-full">
-                              <img src={fusionImage1} alt="图1" className="w-full h-full object-contain rounded-xl p-2" />
-                              <button onClick={(e) => { e.stopPropagation(); setFusionImage1(null); }} className="absolute top-2 right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center">
-                                <X className="h-3 w-3" />
+                              <img src={fusionImage1} alt="图1" className="w-full h-full object-contain rounded-2xl p-3" />
+                              <button onClick={(e) => { e.stopPropagation(); setFusionImage1(null); }} className="absolute top-3 right-3 w-7 h-7 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center shadow-lg">
+                                <X className="h-3.5 w-3.5" />
                               </button>
                             </div>
                           ) : (
-                            <>
-                              <ImageIcon className="h-8 w-8 text-muted-foreground/40 mb-2" />
-                              <span className="text-sm text-muted-foreground">点击上传 或 Ctrl+V 粘贴</span>
-                            </>
+                            <div className="flex flex-col items-center p-6">
+                              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                                <ImageIcon className="h-6 w-6 text-primary/60 group-hover:text-primary transition-colors" />
+                              </div>
+                              <span className="text-sm font-medium text-foreground/70">点击上传</span>
+                            </div>
                           )}
                         </div>
                         <input id="fusion1-upload" type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, setFusionImage1)} />
                       </div>
                       
-                      <button onClick={swapFusionImages} className="w-10 h-10 rounded-full border border-border/40 flex items-center justify-center hover:bg-secondary/50 transition-colors shrink-0">
-                        <ArrowLeftRight className="h-4 w-4 text-muted-foreground" />
+                      <button onClick={swapFusionImages} className="w-12 h-12 rounded-2xl border border-border/30 bg-card/50 flex items-center justify-center hover:bg-primary/10 hover:border-primary/50 transition-all">
+                        <ArrowLeftRight className="h-5 w-5 text-muted-foreground" />
                       </button>
                       
-                      <div className="flex-1 relative">
-                        <span className="absolute -top-2 right-2 px-2 py-0.5 text-xs bg-muted text-muted-foreground rounded z-10">图 2</span>
+                      <div className="relative">
+                        <span className="absolute -top-3 right-3 px-3 py-1 text-xs font-medium bg-secondary text-secondary-foreground rounded-full z-10">图 2</span>
                         <div 
-                          className="border border-dashed border-border/60 rounded-xl aspect-[4/3] flex flex-col items-center justify-center cursor-pointer hover:bg-secondary/20 hover:border-primary/40 transition-all"
+                          className="border-2 border-dashed border-border/50 rounded-2xl aspect-square flex flex-col items-center justify-center cursor-pointer hover:bg-primary/5 hover:border-primary/50 transition-all duration-300 group"
                           onClick={() => document.getElementById("fusion2-upload")?.click()}
                         >
                           {fusionImage2 ? (
                             <div className="relative w-full h-full">
-                              <img src={fusionImage2} alt="图2" className="w-full h-full object-contain rounded-xl p-2" />
-                              <button onClick={(e) => { e.stopPropagation(); setFusionImage2(null); }} className="absolute top-2 right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center">
-                                <X className="h-3 w-3" />
+                              <img src={fusionImage2} alt="图2" className="w-full h-full object-contain rounded-2xl p-3" />
+                              <button onClick={(e) => { e.stopPropagation(); setFusionImage2(null); }} className="absolute top-3 right-3 w-7 h-7 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center shadow-lg">
+                                <X className="h-3.5 w-3.5" />
                               </button>
                             </div>
                           ) : (
-                            <>
-                              <ImageIcon className="h-8 w-8 text-muted-foreground/40 mb-2" />
-                              <span className="text-sm text-muted-foreground">点击上传 或 Ctrl+V 粘贴</span>
-                            </>
+                            <div className="flex flex-col items-center p-6">
+                              <div className="w-14 h-14 rounded-2xl bg-secondary/50 flex items-center justify-center mb-4 group-hover:bg-secondary transition-colors">
+                                <ImageIcon className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors" />
+                              </div>
+                              <span className="text-sm font-medium text-foreground/70">点击上传</span>
+                            </div>
                           )}
                         </div>
                         <input id="fusion2-upload" type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, setFusionImage2)} />
                       </div>
                     </div>
                     
-                    <div className="space-y-4 max-w-2xl mx-auto">
-                      <div className="space-y-2">
-                        <Label className="text-sm text-muted-foreground">融合指令 / 提示词（可选）</Label>
+                    <div className="space-y-6 max-w-2xl mx-auto">
+                      <div className="space-y-3">
+                        <Label className="text-sm font-medium text-foreground/80">融合指令（可选）</Label>
                         <Input
                           value={fusionPrompt}
                           onChange={(e) => setFusionPrompt(e.target.value)}
-                          placeholder="例如：将 图1 的金属质感应用在 图2 的生物形态上，生成一个机械生物..."
-                          className="rounded-xl bg-secondary/30 border-border/40"
+                          placeholder="例如：将 图1 的金属质感应用在 图2 的生物形态上..."
+                          className="h-11 rounded-xl bg-secondary/30 border-border/30"
                         />
                       </div>
                       
-                      <div className="flex items-center gap-4">
-                        <div className="flex-1 space-y-2">
-                          <Label className="text-sm text-muted-foreground">输出比例</Label>
+                      <div className="grid grid-cols-2 gap-6">
+                        <div className="space-y-3">
+                          <Label className="text-sm font-medium text-foreground/80">输出比例</Label>
                           <Select value={fusionRatio} onValueChange={setFusionRatio}>
-                            <SelectTrigger className="rounded-xl bg-secondary/30 border-border/40">
+                            <SelectTrigger className="h-11 rounded-xl bg-secondary/30 border-border/30">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -476,7 +496,7 @@ export default function M72() {
                             </SelectContent>
                           </Select>
                         </div>
-                        <Button className="h-11 px-8 rounded-xl" disabled={!fusionImage1 || !fusionImage2}>
+                        <Button className="h-11 rounded-xl self-end text-base font-medium" disabled={!fusionImage1 || !fusionImage2}>
                           开始融合
                         </Button>
                       </div>
@@ -487,13 +507,13 @@ export default function M72() {
 
               {/* 灵韵染坊 - 风格换色 */}
               {activeMenu === "colorshift" && (
-                <div className="flex gap-6">
-                  <div className="flex-1 max-w-md">
-                    <div className="mb-6">
-                      <h2 className="text-xl font-medium text-primary">灵韵染坊·风格换色</h2>
-                      <p className="text-sm text-muted-foreground mt-1">保留原作笔触与光影结构，仅改变色相与氛围。</p>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl">
+                  <div>
+                    <div className="mb-8">
+                      <h2 className="text-2xl font-medium text-foreground">灵韵染坊</h2>
+                      <p className="text-sm text-muted-foreground mt-2">保留原作笔触与光影结构，仅改变色相与氛围</p>
                     </div>
-                    <div className="bg-card/30 border border-border/40 rounded-2xl p-6">
+                    <div className="bg-card/50 border border-border/30 rounded-2xl p-6 space-y-6">
                       <ImageUploadBox
                         image={colorShiftImage}
                         onUpload={(e) => handleImageUpload(e, setColorShiftImage)}
@@ -502,22 +522,22 @@ export default function M72() {
                         label="底稿输入"
                         hint=""
                       />
-                      <div className="space-y-2 mt-4">
-                        <Label className="text-sm text-muted-foreground">目标色调 / 氛围</Label>
+                      <div className="space-y-3">
+                        <Label className="text-sm font-medium text-foreground/80">目标色调 / 氛围</Label>
                         <Input
                           value={colorShiftTarget}
                           onChange={(e) => setColorShiftTarget(e.target.value)}
                           placeholder="例如：赤金火焰、幽蓝寒冰、暗紫虚空..."
-                          className="rounded-xl bg-secondary/30 border-border/40"
+                          className="h-11 rounded-xl bg-secondary/30 border-border/30"
                         />
                       </div>
-                      <Button className="w-full h-11 rounded-xl mt-6 bg-gradient-to-r from-primary to-cyan-500" disabled={!colorShiftImage}>
+                      <Button className="w-full h-12 rounded-xl text-base font-medium" disabled={!colorShiftImage}>
                         <Palette className="h-4 w-4 mr-2" />
                         开始提染
                       </Button>
                     </div>
                   </div>
-                  <div className="flex-1">
+                  <div>
                     <ResultPanel title="成品展示" emptyText="等待注入灵韵" />
                   </div>
                 </div>
@@ -525,67 +545,64 @@ export default function M72() {
 
               {/* 云裳织造 - 纹理生成 */}
               {activeMenu === "texture" && (
-                <div className="flex gap-6">
-                  <div className="flex-1 max-w-lg">
-                    <div className="mb-6">
-                      <h2 className="text-xl font-medium text-primary">云裳织造·四方连续</h2>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        <span className="text-primary">生成可无缝平铺的高清纹理，</span>适用于服装布料或环境贴图。
-                      </p>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl">
+                  <div>
+                    <div className="mb-8">
+                      <h2 className="text-2xl font-medium text-foreground">云裳织造</h2>
+                      <p className="text-sm text-muted-foreground mt-2">生成可无缝平铺的高清纹理，适用于服装布料或环境贴图</p>
                     </div>
-                    <div className="bg-card/30 border border-border/40 rounded-2xl p-6 space-y-6">
-                      <div className="space-y-3">
-                        <Label className="text-sm text-muted-foreground">纹理参数</Label>
-                        <div className="space-y-2">
-                          <span className="text-xs text-muted-foreground">常用材质</span>
-                          <div className="flex flex-wrap gap-2">
-                            {materialTags.map((mat) => (
-                              <button
-                                key={mat}
-                                onClick={() => toggleMaterial(mat)}
-                                className={`px-3 py-1.5 text-sm rounded-lg border transition-colors ${
-                                  selectedMaterials.includes(mat)
-                                    ? "bg-primary text-primary-foreground border-primary"
-                                    : "border-border/60 text-muted-foreground hover:bg-secondary/50"
-                                }`}
-                              >
-                                {mat}
-                              </button>
-                            ))}
-                          </div>
+                    <div className="bg-card/50 border border-border/30 rounded-2xl p-6 space-y-6">
+                      <div className="space-y-4">
+                        <Label className="text-sm font-medium text-foreground/80">常用材质</Label>
+                        <div className="flex flex-wrap gap-2">
+                          {materialTags.map((mat) => (
+                            <button
+                              key={mat}
+                              onClick={() => toggleMaterial(mat)}
+                              className={`px-4 py-2 text-sm rounded-xl border transition-all duration-200 ${
+                                selectedMaterials.includes(mat)
+                                  ? "bg-primary/15 text-primary border-primary/50"
+                                  : "border-border/30 text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
+                              }`}
+                            >
+                              {mat}
+                            </button>
+                          ))}
                         </div>
                       </div>
                       
-                      <div className="space-y-2">
-                        <Label className="text-sm text-muted-foreground">材质类型（自定义）</Label>
+                      <div className="space-y-3">
+                        <Label className="text-sm font-medium text-foreground/80">材质类型（自定义）</Label>
                         <Input
                           value={materialType}
                           onChange={(e) => setMaterialType(e.target.value)}
-                          className="rounded-xl bg-secondary/30 border-border/40"
+                          className="h-11 rounded-xl bg-secondary/30 border-border/30"
                         />
                       </div>
                       
-                      <div className="space-y-2">
-                        <Label className="text-sm text-muted-foreground">纹样描述 / 细节</Label>
+                      <div className="space-y-3">
+                        <Label className="text-sm font-medium text-foreground/80">纹样描述</Label>
                         <Textarea
                           value={patternDesc}
                           onChange={(e) => setPatternDesc(e.target.value)}
-                          placeholder="例如：金线绣制的祥云图案，深红色底色，微泛细节..."
-                          className="rounded-xl bg-secondary/30 border-border/40 min-h-[100px] resize-none"
+                          placeholder="例如：金线绣制的祥云图案，深红色底色..."
+                          className="rounded-xl bg-secondary/30 border-border/30 min-h-[100px] resize-none"
                         />
                       </div>
                       
-                      <Button className="w-full h-11 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600">
+                      <Button className="w-full h-12 rounded-xl text-base font-medium">
                         <Shirt className="h-4 w-4 mr-2" />
                         织造纹理
                       </Button>
                     </div>
                   </div>
-                  <div className="flex-1">
-                    <Label className="text-sm text-muted-foreground mb-2 block">锦缎预览</Label>
-                    <div className="border border-border/40 rounded-xl bg-secondary/10 min-h-[500px] flex flex-col items-center justify-center">
-                      <Grid2X2 className="h-12 w-12 text-muted-foreground/20 mb-3" />
-                      <span className="text-sm text-muted-foreground/40">等待织造指令</span>
+                  <div>
+                    <Label className="text-sm font-medium text-foreground/80 mb-3 block">锦缎预览</Label>
+                    <div className="border border-border/30 rounded-2xl bg-card/50 min-h-[500px] flex flex-col items-center justify-center">
+                      <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+                        <Grid2X2 className="h-8 w-8 text-primary/40" />
+                      </div>
+                      <span className="text-sm text-muted-foreground">等待织造指令</span>
                     </div>
                   </div>
                 </div>
@@ -593,13 +610,13 @@ export default function M72() {
 
               {/* 金石篆刻 - 灰度图生成 */}
               {activeMenu === "relief" && (
-                <div className="flex gap-6">
-                  <div className="flex-1 max-w-md">
-                    <div className="mb-6">
-                      <h2 className="text-xl font-medium text-amber-400">金石篆刻·灰度图生成</h2>
-                      <p className="text-sm text-muted-foreground mt-1">上传线稿图片，AI将转换为黑色底、带体积的灰度图，可用于生成 Normal Map 或浮雕效果。</p>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl">
+                  <div>
+                    <div className="mb-8">
+                      <h2 className="text-2xl font-medium text-foreground">金石篆刻</h2>
+                      <p className="text-sm text-muted-foreground mt-2">上传线稿图片，转换为灰度高度图，可用于生成 Normal Map 或浮雕效果</p>
                     </div>
-                    <div className="bg-card/30 border border-amber-500/30 rounded-2xl p-6">
+                    <div className="bg-card/50 border border-border/30 rounded-2xl p-6 space-y-6">
                       <ImageUploadBox
                         image={reliefImage}
                         onUpload={(e) => handleImageUpload(e, setReliefImage)}
@@ -608,23 +625,35 @@ export default function M72() {
                         label="线稿输入"
                       />
                       
-                      <div className="mt-4 p-3 bg-secondary/20 rounded-xl">
-                        <p className="text-xs text-muted-foreground font-medium mb-2">输出说明:</p>
-                        <ul className="text-xs text-muted-foreground/80 space-y-1 list-disc list-inside">
-                          <li>纯灰度图（无颜色）</li>
-                          <li>黑色背景</li>
-                          <li>灰度值表示体积深度</li>
-                          <li>可用于生成 Normal Map</li>
+                      <div className="p-4 bg-secondary/30 rounded-xl border border-border/20">
+                        <p className="text-sm font-medium text-foreground/80 mb-3">输出说明</p>
+                        <ul className="text-sm text-muted-foreground space-y-2">
+                          <li className="flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                            纯灰度图（无颜色）
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                            黑色背景
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                            灰度值表示体积深度
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                            可用于生成 Normal Map
+                          </li>
                         </ul>
                       </div>
                       
-                      <Button className="w-full h-11 rounded-xl mt-6" disabled={!reliefImage}>
+                      <Button className="w-full h-12 rounded-xl text-base font-medium" disabled={!reliefImage}>
                         <Box className="h-4 w-4 mr-2" />
                         生成高度图
                       </Button>
                     </div>
                   </div>
-                  <div className="flex-1">
+                  <div>
                     <ResultPanel title="高度图输出" emptyText="等待输入线稿" />
                   </div>
                 </div>
@@ -632,23 +661,21 @@ export default function M72() {
 
               {/* 藏经阁 - 历史记录 */}
               {activeMenu === "history" && (
-                <div>
-                  <div className="mb-6">
-                    <h2 className="text-xl font-medium text-primary">藏经阁·历史图鉴</h2>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      <span className="text-primary">查看过往的生成记录，回溯灵感源泉。</span>
-                    </p>
+                <div className="max-w-5xl">
+                  <div className="mb-8">
+                    <h2 className="text-2xl font-medium text-foreground">藏经阁</h2>
+                    <p className="text-sm text-muted-foreground mt-2">查看过往的生成记录，回溯灵感源泉</p>
                   </div>
                   
-                  <div className="flex gap-2 mb-6">
+                  <div className="flex gap-2 mb-8 flex-wrap">
                     {historyTabs.map((tab) => (
                       <button
                         key={tab}
                         onClick={() => setHistoryTab(tab)}
-                        className={`px-4 py-2 text-sm rounded-lg transition-colors ${
+                        className={`px-5 py-2.5 text-sm rounded-xl transition-all duration-200 ${
                           historyTab === tab
-                            ? "bg-primary text-primary-foreground"
-                            : "text-muted-foreground hover:bg-secondary/50"
+                            ? "bg-primary/15 text-primary font-medium"
+                            : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
                         }`}
                       >
                         {tab}
@@ -656,38 +683,38 @@ export default function M72() {
                     ))}
                   </div>
                   
-                  <div className="flex flex-col items-center justify-center min-h-[400px] text-muted-foreground/40">
-                    <BookOpen className="h-16 w-16 mb-4" />
-                    <span className="text-sm">此分类下暂无记录</span>
+                  <div className="bg-card/50 border border-border/30 rounded-2xl min-h-[400px] flex flex-col items-center justify-center">
+                    <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+                      <BookOpen className="h-10 w-10 text-primary/40" />
+                    </div>
+                    <span className="text-sm text-muted-foreground">此分类下暂无记录</span>
                   </div>
                 </div>
               )}
 
               {/* 天工坊 - 全局设置 */}
               {activeMenu === "workshop" && (
-                <div>
-                  <div className="mb-6 flex items-center justify-between">
+                <div className="max-w-5xl">
+                  <div className="mb-8 flex items-center justify-between">
                     <div>
-                      <h2 className="text-xl font-medium text-primary">天工坊·全局设置</h2>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        <span className="text-primary">调整生成参数，提示词模板及系统连接。</span>
-                      </p>
+                      <h2 className="text-2xl font-medium text-foreground">天工坊</h2>
+                      <p className="text-sm text-muted-foreground mt-2">调整生成参数、提示词模板及系统连接</p>
                     </div>
                     <div className="flex gap-3">
-                      <Button variant="outline" className="rounded-xl">恢复默认</Button>
-                      <Button className="rounded-xl">保存设置</Button>
+                      <Button variant="outline" className="h-11 rounded-xl border-border/30">恢复默认</Button>
+                      <Button className="h-11 rounded-xl">保存设置</Button>
                     </div>
                   </div>
                   
-                  <div className="flex gap-2 mb-6 flex-wrap">
+                  <div className="flex gap-2 mb-8 flex-wrap">
                     {workshopTabs.map((tab) => (
                       <button
                         key={tab}
                         onClick={() => setWorkshopTab(tab)}
-                        className={`px-4 py-2 text-sm rounded-lg border transition-colors ${
+                        className={`px-5 py-2.5 text-sm rounded-xl transition-all duration-200 ${
                           workshopTab === tab
-                            ? "bg-secondary border-border text-foreground"
-                            : "border-transparent text-muted-foreground hover:text-foreground"
+                            ? "bg-primary/15 text-primary font-medium"
+                            : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
                         }`}
                       >
                         {tab}
@@ -696,45 +723,42 @@ export default function M72() {
                   </div>
                   
                   {workshopTab === "通用设置" && (
-                    <div className="bg-card/30 border border-border/40 rounded-2xl p-6 space-y-6 max-w-4xl">
-                      <div className="grid grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <Label className="text-sm text-muted-foreground">游戏名称 (Project Name)</Label>
+                    <div className="bg-card/50 border border-border/30 rounded-2xl p-8 space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-3">
+                          <Label className="text-sm font-medium text-foreground/80">游戏名称</Label>
                           <Input
                             value={projectName}
                             onChange={(e) => setProjectName(e.target.value)}
-                            className="rounded-xl bg-secondary/30 border-border/40"
+                            className="h-11 rounded-xl bg-secondary/30 border-border/30"
                           />
                         </div>
-                        <div className="space-y-2">
-                          <Label className="text-sm text-muted-foreground">游戏类型 (Genre)</Label>
+                        <div className="space-y-3">
+                          <Label className="text-sm font-medium text-foreground/80">游戏类型</Label>
                           <Input
                             value={gameGenre}
                             onChange={(e) => setGameGenre(e.target.value)}
-                            className="rounded-xl bg-secondary/30 border-border/40"
+                            className="h-11 rounded-xl bg-secondary/30 border-border/30"
                           />
                         </div>
                       </div>
                       
-                      <div className="space-y-2">
-                        <Label className="text-sm text-muted-foreground flex items-center gap-1">
-                          全局世界观 (Custom Context)
-                          <span className="w-4 h-4 rounded-full border border-muted-foreground/40 flex items-center justify-center text-[10px]">?</span>
-                        </Label>
+                      <div className="space-y-3">
+                        <Label className="text-sm font-medium text-foreground/80">全局世界观</Label>
                         <Textarea
                           value={worldContext}
                           onChange={(e) => setWorldContext(e.target.value)}
-                          className="rounded-xl bg-secondary/30 border-border/40 min-h-[100px] resize-none"
+                          className="rounded-xl bg-secondary/30 border-border/30 min-h-[120px] resize-none"
                         />
                       </div>
                       
-                      <div className="space-y-3">
+                      <div className="space-y-4">
                         <div className="flex items-center justify-between">
                           <div>
-                            <Label className="text-sm font-medium">创造力 (Temperature)</Label>
+                            <Label className="text-sm font-medium text-foreground/80">创造力 (Temperature)</Label>
                             <p className="text-xs text-muted-foreground mt-1">值越高越有创意，但也可能越不稳定</p>
                           </div>
-                          <span className="text-sm font-medium text-primary">{creativity[0].toFixed(1)}</span>
+                          <span className="text-sm font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">{creativity[0].toFixed(1)}</span>
                         </div>
                         <Slider
                           value={creativity}
@@ -748,9 +772,11 @@ export default function M72() {
                   )}
                   
                   {workshopTab !== "通用设置" && (
-                    <div className="flex flex-col items-center justify-center min-h-[300px] text-muted-foreground/40">
-                      <Wrench className="h-12 w-12 mb-3" />
-                      <span className="text-sm">{workshopTab} 设置开发中...</span>
+                    <div className="bg-card/50 border border-border/30 rounded-2xl min-h-[300px] flex flex-col items-center justify-center">
+                      <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+                        <Wrench className="h-8 w-8 text-primary/40" />
+                      </div>
+                      <span className="text-sm text-muted-foreground">{workshopTab} 设置开发中...</span>
                     </div>
                   )}
                 </div>

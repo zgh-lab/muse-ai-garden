@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { TopNavbar } from "@/components/TopNavbar";
+import { AppSidebar } from "@/components/AppSidebar";
+import { UserMenu } from "@/components/UserMenu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,7 +30,6 @@ import {
   BookOpen,
   Grid2X2,
 } from "lucide-react";
-import { AssetLibraryMini } from "@/components/AssetLibraryMini";
 
 const menuItems = [
   { id: "generate", title: "法宝炼制", subtitle: "生成图标", icon: Flame },
@@ -201,51 +201,34 @@ export default function M72() {
     </div>
   );
 
-  // 渲染右侧面板（结果+资产库）
-  const RightPanel = ({ 
-    title, 
-    emptyText = "等待输入数据",
-    children 
-  }: { 
-    title: string; 
-    emptyText?: string;
-    children?: React.ReactNode;
-  }) => (
-    <div className="flex flex-col gap-6 h-full">
-      {/* 结果面板 */}
-      <div className="flex-1 flex flex-col min-h-0">
-        <Label className="text-sm font-medium text-foreground/80 mb-3">{title}</Label>
-        <div className="flex-1 border border-border/30 rounded-2xl bg-card/50 flex flex-col items-center justify-center min-h-[320px]">
-          {children || (
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-              </div>
-              <span className="text-sm text-muted-foreground">{emptyText}</span>
-            </div>
-          )}
+  // 渲染结果预览区域
+  const ResultPanel = ({ title, emptyText = "等待输入数据" }: { title: string; emptyText?: string }) => (
+    <div className="flex-1 flex flex-col">
+      <Label className="text-sm font-medium text-foreground/80 mb-3">{title}</Label>
+      <div className="flex-1 border border-border/30 rounded-2xl bg-card/50 flex flex-col items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+            <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+          </div>
+          <span className="text-sm text-muted-foreground">{emptyText}</span>
         </div>
       </div>
-      {/* 资产库缩略控件 */}
-      <div className="h-[280px] shrink-0">
-        <AssetLibraryMini />
-      </div>
-    </div>
-  );
-
-  // 页面标题组件
-  const PageHeader = ({ title, subtitle }: { title: string; subtitle: string }) => (
-    <div className="mb-6">
-      <h2 className="text-2xl font-medium text-foreground">{title}</h2>
-      <p className="text-sm text-muted-foreground mt-2">{subtitle}</p>
     </div>
   );
 
   return (
-    <div className="min-h-screen flex flex-col w-full bg-background">
-      <TopNavbar />
+    <div className="min-h-screen flex w-full bg-background">
+      <AppSidebar />
       
-      <main className="flex-1 overflow-hidden flex">
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Header */}
+        <header className="h-14 border-b border-border/30 flex items-center px-6 bg-card/50 backdrop-blur-sm">
+          <h1 className="text-lg font-medium text-foreground">M72 · 创意工坊</h1>
+          <div className="flex-1" />
+          <UserMenu />
+        </header>
+
+        <main className="flex-1 overflow-hidden flex">
           {/* 功能标签页 */}
           <div className="w-52 border-r border-border/30 bg-card/30">
             <ScrollArea className="h-full py-4">
@@ -280,12 +263,12 @@ export default function M72() {
             <div className="p-8">
               {/* 法宝炼制 */}
               {activeMenu === "generate" && (
-                <div className="max-w-6xl">
-                  <div className="mb-6">
-                    <h2 className="text-2xl font-medium text-foreground">法宝炼制</h2>
-                    <p className="text-sm text-muted-foreground mt-2">选择分类并输入主体描述，生成神兵法宝图标</p>
-                  </div>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl">
+                  <div>
+                    <div className="mb-8">
+                      <h2 className="text-2xl font-medium text-foreground">法宝炼制</h2>
+                      <p className="text-sm text-muted-foreground mt-2">选择分类并输入主体描述，生成神兵法宝图标</p>
+                    </div>
                     <div className="bg-card/50 border border-border/30 rounded-2xl p-6 space-y-6">
                       {/* 结构参考图 */}
                       <div className="space-y-3">
@@ -385,21 +368,23 @@ export default function M72() {
                         {isGenerating ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />炼制中...</> : <><Flame className="h-4 w-4 mr-2" />开炉炼制</>}
                       </Button>
                     </div>
-                    <div>
-                      <RightPanel title="生成结果" emptyText="等待输入数据" />
-                    </div>
+                  </div>
+                  <div>
+                    <ResultPanel title="生成结果" emptyText="等待输入数据" />
                   </div>
                 </div>
               )}
 
               {/* 仙姿绘卷 - 三视图 */}
               {activeMenu === "threeview" && (
-                <div className="max-w-6xl">
-                  <div className="mb-6">
-                    <h2 className="text-2xl font-medium text-foreground">仙姿绘卷</h2>
-                    <p className="text-sm text-muted-foreground mt-2">上传角色正视图，AI自动生成侧视图与背视图，8K级细节无损拼接</p>
-                  </div>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl">
+                  <div>
+                    <div className="mb-8">
+                      <h2 className="text-2xl font-medium text-foreground">仙姿绘卷</h2>
+                      <p className="text-sm text-muted-foreground mt-2">
+                        上传角色正视图，AI自动生成侧视图与背视图，8K级细节无损拼接
+                      </p>
+                    </div>
                     <div className="bg-card/50 border border-border/30 rounded-2xl p-6">
                       <ImageUploadBox
                         image={threeViewImage}
@@ -413,68 +398,95 @@ export default function M72() {
                         生成高清三视图
                       </Button>
                     </div>
-                    <div>
-                      <RightPanel title="三视图结果" emptyText="等待上传原画" />
-                    </div>
+                  </div>
+                  <div>
+                    <ResultPanel title="三视图结果" emptyText="等待上传原画" />
                   </div>
                 </div>
               )}
 
               {/* 万象融合 */}
               {activeMenu === "fusion" && (
-                <div className="max-w-6xl">
-                  <div className="mb-6">
+                <div className="max-w-5xl">
+                  <div className="mb-8">
                     <h2 className="text-2xl font-medium text-foreground">万象融合</h2>
                     <p className="text-sm text-muted-foreground mt-2">上传两张图片，AI自动进行元素重组与风格融合</p>
                   </div>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div className="bg-card/50 border border-border/30 rounded-2xl p-6 space-y-6">
-                      <div className="grid grid-cols-[1fr,auto,1fr] items-center gap-4">
-                        <div className="relative">
-                          <span className="absolute -top-3 left-3 px-3 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-full z-10">图 1</span>
-                          <div className="border-2 border-dashed border-border/50 rounded-2xl aspect-square flex flex-col items-center justify-center cursor-pointer hover:bg-primary/5 hover:border-primary/50 transition-all duration-300 group" onClick={() => document.getElementById("fusion1-upload")?.click()}>
-                            {fusionImage1 ? (
-                              <div className="relative w-full h-full">
-                                <img src={fusionImage1} alt="图1" className="w-full h-full object-contain rounded-2xl p-3" />
-                                <button onClick={(e) => { e.stopPropagation(); setFusionImage1(null); }} className="absolute top-3 right-3 w-7 h-7 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center shadow-lg"><X className="h-3.5 w-3.5" /></button>
+                  <div className="bg-card/50 border border-border/30 rounded-2xl p-8">
+                    <div className="grid grid-cols-[1fr,auto,1fr] items-center gap-6 mb-8">
+                      <div className="relative">
+                        <span className="absolute -top-3 left-3 px-3 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-full z-10">图 1</span>
+                        <div 
+                          className="border-2 border-dashed border-border/50 rounded-2xl aspect-square flex flex-col items-center justify-center cursor-pointer hover:bg-primary/5 hover:border-primary/50 transition-all duration-300 group"
+                          onClick={() => document.getElementById("fusion1-upload")?.click()}
+                        >
+                          {fusionImage1 ? (
+                            <div className="relative w-full h-full">
+                              <img src={fusionImage1} alt="图1" className="w-full h-full object-contain rounded-2xl p-3" />
+                              <button onClick={(e) => { e.stopPropagation(); setFusionImage1(null); }} className="absolute top-3 right-3 w-7 h-7 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center shadow-lg">
+                                <X className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="flex flex-col items-center p-6">
+                              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                                <ImageIcon className="h-6 w-6 text-primary/60 group-hover:text-primary transition-colors" />
                               </div>
-                            ) : (
-                              <div className="flex flex-col items-center p-4">
-                                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors"><ImageIcon className="h-5 w-5 text-primary/60 group-hover:text-primary transition-colors" /></div>
-                                <span className="text-xs font-medium text-foreground/70">点击上传</span>
-                              </div>
-                            )}
-                          </div>
-                          <input id="fusion1-upload" type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, setFusionImage1)} />
+                              <span className="text-sm font-medium text-foreground/70">点击上传</span>
+                            </div>
+                          )}
                         </div>
-                        <button onClick={swapFusionImages} className="w-10 h-10 rounded-xl border border-border/30 bg-card/50 flex items-center justify-center hover:bg-primary/10 hover:border-primary/50 transition-all"><ArrowLeftRight className="h-4 w-4 text-muted-foreground" /></button>
-                        <div className="relative">
-                          <span className="absolute -top-3 right-3 px-3 py-1 text-xs font-medium bg-secondary text-secondary-foreground rounded-full z-10">图 2</span>
-                          <div className="border-2 border-dashed border-border/50 rounded-2xl aspect-square flex flex-col items-center justify-center cursor-pointer hover:bg-primary/5 hover:border-primary/50 transition-all duration-300 group" onClick={() => document.getElementById("fusion2-upload")?.click()}>
-                            {fusionImage2 ? (
-                              <div className="relative w-full h-full">
-                                <img src={fusionImage2} alt="图2" className="w-full h-full object-contain rounded-2xl p-3" />
-                                <button onClick={(e) => { e.stopPropagation(); setFusionImage2(null); }} className="absolute top-3 right-3 w-7 h-7 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center shadow-lg"><X className="h-3.5 w-3.5" /></button>
-                              </div>
-                            ) : (
-                              <div className="flex flex-col items-center p-4">
-                                <div className="w-12 h-12 rounded-2xl bg-secondary/50 flex items-center justify-center mb-3 group-hover:bg-secondary transition-colors"><ImageIcon className="h-5 w-5 text-muted-foreground group-hover:text-foreground transition-colors" /></div>
-                                <span className="text-xs font-medium text-foreground/70">点击上传</span>
-                              </div>
-                            )}
-                          </div>
-                          <input id="fusion2-upload" type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, setFusionImage2)} />
-                        </div>
+                        <input id="fusion1-upload" type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, setFusionImage1)} />
                       </div>
+                      
+                      <button onClick={swapFusionImages} className="w-12 h-12 rounded-2xl border border-border/30 bg-card/50 flex items-center justify-center hover:bg-primary/10 hover:border-primary/50 transition-all">
+                        <ArrowLeftRight className="h-5 w-5 text-muted-foreground" />
+                      </button>
+                      
+                      <div className="relative">
+                        <span className="absolute -top-3 right-3 px-3 py-1 text-xs font-medium bg-secondary text-secondary-foreground rounded-full z-10">图 2</span>
+                        <div 
+                          className="border-2 border-dashed border-border/50 rounded-2xl aspect-square flex flex-col items-center justify-center cursor-pointer hover:bg-primary/5 hover:border-primary/50 transition-all duration-300 group"
+                          onClick={() => document.getElementById("fusion2-upload")?.click()}
+                        >
+                          {fusionImage2 ? (
+                            <div className="relative w-full h-full">
+                              <img src={fusionImage2} alt="图2" className="w-full h-full object-contain rounded-2xl p-3" />
+                              <button onClick={(e) => { e.stopPropagation(); setFusionImage2(null); }} className="absolute top-3 right-3 w-7 h-7 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center shadow-lg">
+                                <X className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="flex flex-col items-center p-6">
+                              <div className="w-14 h-14 rounded-2xl bg-secondary/50 flex items-center justify-center mb-4 group-hover:bg-secondary transition-colors">
+                                <ImageIcon className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors" />
+                              </div>
+                              <span className="text-sm font-medium text-foreground/70">点击上传</span>
+                            </div>
+                          )}
+                        </div>
+                        <input id="fusion2-upload" type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, setFusionImage2)} />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-6 max-w-2xl mx-auto">
                       <div className="space-y-3">
                         <Label className="text-sm font-medium text-foreground/80">融合指令（可选）</Label>
-                        <Input value={fusionPrompt} onChange={(e) => setFusionPrompt(e.target.value)} placeholder="例如：将 图1 的金属质感应用在 图2 的生物形态上..." className="h-11 rounded-xl bg-secondary/30 border-border/30" />
+                        <Input
+                          value={fusionPrompt}
+                          onChange={(e) => setFusionPrompt(e.target.value)}
+                          placeholder="例如：将 图1 的金属质感应用在 图2 的生物形态上..."
+                          className="h-11 rounded-xl bg-secondary/30 border-border/30"
+                        />
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
+                      
+                      <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-3">
                           <Label className="text-sm font-medium text-foreground/80">输出比例</Label>
                           <Select value={fusionRatio} onValueChange={setFusionRatio}>
-                            <SelectTrigger className="h-11 rounded-xl bg-secondary/30 border-border/30"><SelectValue /></SelectTrigger>
+                            <SelectTrigger className="h-11 rounded-xl bg-secondary/30 border-border/30">
+                              <SelectValue />
+                            </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="keep1">和图1保持一致</SelectItem>
                               <SelectItem value="keep2">和图2保持一致</SelectItem>
@@ -484,11 +496,10 @@ export default function M72() {
                             </SelectContent>
                           </Select>
                         </div>
-                        <Button className="h-11 rounded-xl self-end text-base font-medium" disabled={!fusionImage1 || !fusionImage2}>开始融合</Button>
+                        <Button className="h-11 rounded-xl self-end text-base font-medium" disabled={!fusionImage1 || !fusionImage2}>
+                          开始融合
+                        </Button>
                       </div>
-                    </div>
-                    <div>
-                      <RightPanel title="融合结果" emptyText="等待输入两张图片" />
                     </div>
                   </div>
                 </div>
@@ -526,8 +537,8 @@ export default function M72() {
                       </Button>
                     </div>
                   </div>
-                  <div className="pt-[76px]">
-                    <RightPanel title="成品展示" emptyText="等待注入灵韵" />
+                  <div>
+                    <ResultPanel title="成品展示" emptyText="等待注入灵韵" />
                   </div>
                 </div>
               )}
@@ -585,13 +596,14 @@ export default function M72() {
                       </Button>
                     </div>
                   </div>
-                  <div className="pt-[76px]">
-                    <RightPanel title="锦缎预览" emptyText="等待织造指令">
+                  <div>
+                    <Label className="text-sm font-medium text-foreground/80 mb-3 block">锦缎预览</Label>
+                    <div className="border border-border/30 rounded-2xl bg-card/50 min-h-[500px] flex flex-col items-center justify-center">
                       <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
                         <Grid2X2 className="h-8 w-8 text-primary/40" />
                       </div>
                       <span className="text-sm text-muted-foreground">等待织造指令</span>
-                    </RightPanel>
+                    </div>
                   </div>
                 </div>
               )}
@@ -641,8 +653,8 @@ export default function M72() {
                       </Button>
                     </div>
                   </div>
-                  <div className="pt-[76px]">
-                    <RightPanel title="高度图输出" emptyText="等待输入线稿" />
+                  <div>
+                    <ResultPanel title="高度图输出" emptyText="等待输入线稿" />
                   </div>
                 </div>
               )}
@@ -772,6 +784,7 @@ export default function M72() {
             </div>
           </ScrollArea>
         </main>
+      </div>
     </div>
   );
 }
